@@ -3,6 +3,8 @@ TIMEFLIX VERSION DOCKER
 
 --------------------------------------------
 
-Version base 1.0
+Version 1.0
+
+- Base
 
 
