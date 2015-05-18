@@ -102,7 +102,7 @@ $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $finish = $time;
 $total_time = round(($finish - $start), 4);
-echo 'TIMEFLIX - Générer en '.$total_time.' seconds - (Mem : '.format_bytes(memory_get_usage()).')';
+echo 'Générer en '.$total_time.' seconds - Mem : '.format_bytes(memory_get_usage()).'';
 ?></center>
       </div>
       </div> 

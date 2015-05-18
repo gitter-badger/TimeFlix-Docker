@@ -34,7 +34,7 @@ if(!empty($_POST['username']) AND !empty($_POST['password']))
 	$user_agent =  $user_os.' - '.$user_browser;
 	$req->bindParam(':id_users', $_SESSION['id_users']);
 	$req->bindParam(':useragent', $user_agent);
-	$req->bindParam(':adresse_ip', $_SERVER['HTTP_X_FORWARDED_FOR']);
+	$req->bindParam(':adresse_ip', $_SERVER['HTTP_X_REAL_IP']);
 	$req->execute();
 	header('Location: index.php?view=goflix');  
 }

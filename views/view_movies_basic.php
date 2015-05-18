@@ -4,7 +4,7 @@
 $t_films = count($films);
 if($t_films == 0)
 {
-echo '<center><p style="font-size:30px;text-transform: uppercase;font-weight: 300;text-shadow: 0 2px 0 #000;color:white;margin-top:10%;">Votre bibliothèque est vide... </p><br>
+echo '<center><p style="font-size:30px;text-transform: uppercase;font-weight: 300;text-shadow: 0 2px 0 #000;color:white;margin-top:0%;">LA LISTE EST VIDE ... </p><br>
 <img style="border-radius: 10px;box-shadow: 1px 1px 8px #000;" src="https://31.media.tumblr.com/c1aa669e433bb01fc397abf29da26c56/tumblr_mr1q7mqsWa1rk8p43o1_500.gif"><center>';	
 }
 foreach ($films as $key => $film) 
@@ -89,7 +89,7 @@ $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $finish = $time;
 $total_time = round(($finish - $start), 4);
-echo 'TIMEFLIX - Générer en '.$total_time.' seconds - (Mem : '.format_bytes(memory_get_usage()).')';
+echo 'Générer en '.$total_time.' seconds - Mem : '.format_bytes(memory_get_usage()).'';
 ?></center>
       </div>
 </div>
