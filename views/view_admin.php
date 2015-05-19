@@ -1,6 +1,48 @@
-<div class="row" style="margin-top:3%;left:3%;z-index:100;background-color: #FFF;padding:2%;box-shadow: 1px 1px 8px #000;">
-<form method="post" action="">
+<div class="row" style="margin-top:0%;margin-left:2%;margin-right:2%;z-index:100;padding-top:4%;">
+      <div class="col-md-2" style="float:left;background-color: #fff;padding:0;border-radius: 2px;box-shadow: 1px 1px 8px #000;">
+		<a href="index.php?view=admin&for=users" class="list-group-item"><i class="fa fa-users list-group-icon"></i>Utilisateurs</a>
+		<a href="index.php?view=admin&for=files" class="list-group-item"><i class="fa fa-tasks list-group-icon"></i>Fichiers</a>
+		<a href="index.php?view=admin&for=stats" class="list-group-item"><i class="fa fa-signal list-group-icon"></i>Statistique</a>
+		<a href="index.php?view=admin&for=config" class="list-group-item"><i class="fa fa-cogs list-group-icon"></i>Configuration</a>
+		<a href="index.php?view=admin&for=update" class="list-group-item"><i class="fa fa-cloud-download list-group-icon"></i>Mise à jour</a>
+      </div>
+
+<div class="col-md-10" style="background-color: #fff:padding:1%;">
+<?php 
+if($_GET['for'] == 'config')
+	{?>
+		<div class="panel">
+		<div class="panel-heading">
+			<span class="panel-title"><i class="fa fa-cogs list-group-icon"></i> Configuration</span>
+		</div>
+		<div class="panel-body">
+			<!-- <div class="note note-info">More info and examples at <a href="http://www.oesmith.co.uk/morris.js/" target="_blank">http://www.oesmith.co.uk/morris.js/</a></div> -->
+
+			<div class="graph-container">
+				<div id="connexion-graph" class="graph"></div>
+			</div>
+		</div>
+				</div>
 	<?php 
+}
+if($_GET['for'] == 'update')
+	{?>
+		<div class="panel">
+		<div class="panel-heading">
+			<span class="panel-title"><i class="fa fa-cloud-download list-group-icon"></i> Update</span>
+		</div>
+		<div class="panel-body">
+			<div class="alert alert-success" role="alert"><b>Parfait</b>,TimeFlix est à jour. [1.0 beta]</div>
+
+			<div class="graph-container">
+				<div id="connexion-graph" class="graph"></div>
+			</div>
+		</div>
+				</div>
+	<?php 
+}
+	 if($_GET['for'] == 'stats')
+{
 	if(!empty($_POST['email']))
 	{
 		$req = $bdd->prepare("INSERT INTO `invitation` 
@@ -98,15 +140,25 @@
 					</div>
 				</div>
 
-
-<legend>Invitation</legend>
+<?php
+}
+if($_GET['for'] == 'users')
+{
+	?>
+	<form method="post" action="index.php?view=admin&for=users">
+	<div class="panel">
+					<div class="panel-heading">
+						<span class="panel-title">Utilisateurs</span>
+					</div>
+					<div class="panel-body">
+<legend>Envoyer une invitation</legend>
   <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+    <label for="exampleInputEmail1">Adresse email</label>
+    <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Entrez un email valide">
   </div>
   <button style="float:right;" type="submit" class="btn btn-success">Générer</button>
 </form>
-<legend>Users</legend>
+<legend>Gérer les utilisateurs</legend>
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -134,10 +186,25 @@
 			<td><?php echo $log[0]['adresse_ip']; ?> <span class="label label-info"><?php echo utf8_encode($record->city); ?></span></td>
 			<td><?php echo get_data_usage($user['id_users']); ?></td>
 		</tr>
-		<?php 
-		}
-		?>
+		<?php
+	}
+	?>
 </table>
+<div class="graph-container">
+							<div id="connexion-graph" class="graph"></div>
+						</div>
+					</div>
+				</div>
+	<?php
+		}
+if($_GET['for'] == 'files')
+{
+	?>
+<div class="panel">
+<div class="panel-heading">
+	<span class="panel-title">Connexions / Jour</span>
+</div>
+<div class="panel-body">
 <legend>Movies</legend>
 <table class="table table-striped">
 	<thead>
@@ -169,6 +236,9 @@
 		}
 		?>
 </table>
+<?php
+}
+?>
 
 <!--
 <div style="position: fixed;
