@@ -168,7 +168,7 @@ function get_bdd()
   global $bdd;
   $req = $bdd->prepare("SELECT SUM(Data_length)
     FROM  INFORMATION_SCHEMA.PARTITIONS
-    WHERE TABLE_SCHEMA = 'time'");
+    WHERE TABLE_SCHEMA = 'timeflix'");
   $req->execute();
   $value = $req->fetchAll();  
   return format_bytes($value[0]['SUM(Data_length)']);
