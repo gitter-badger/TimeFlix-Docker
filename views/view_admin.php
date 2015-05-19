@@ -202,10 +202,9 @@ if($_GET['for'] == 'files')
 	?>
 <div class="panel">
 <div class="panel-heading">
-	<span class="panel-title">Connexions / Jour</span>
+	<span class="panel-title"><i class="fa fa-tasks list-group-icon"></i> Fichiers</span>
 </div>
 <div class="panel-body">
-<legend>Movies</legend>
 <table class="table table-striped">
 	<thead>
 		<tr>

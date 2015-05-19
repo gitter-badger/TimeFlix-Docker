@@ -243,8 +243,8 @@ function format_bytes($bytes)
 function get_video_info($videofile) 
 {
     putenv('LD_LIBRARY_PATH=/home/kouja/lib');
-    $ffprobe_path = 'ffprobe';
-    $ffmpeg_path = 'ffmpeg';
+    $ffprobe_path = '~/bin/ffprobe';
+    $ffmpeg_path = '~/bin/ffmpeg';
     $ffprobe_cmd =  $ffprobe_path . " -v quiet -print_format json -show_format -show_streams " . $videofile . " 2>&1";
     ob_start();
     passthru($ffprobe_cmd);

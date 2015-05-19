@@ -38,7 +38,7 @@ function secure_link($path)
     $md5 = base64_encode(md5($secret . $path . $expire, true)); // Using binary hashing.
     $md5 = strtr($md5, '+/', '-_'); // + and / are considered special characters in URLs, see the wikipedia page linked in references.
     $md5 = str_replace('=', '', $md5); // When used in query parameters the base64 padding character is considered special.
-    return '//data.timeflix.net'.$path.'?st='.$md5.'&e='.$expire;
+    return ''.$path.'?st='.$md5.'&e='.$expire;
 }
 function generateCallTrace()
 {

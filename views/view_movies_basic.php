@@ -72,7 +72,7 @@ foreach ($films as $key => $film)
         ?>
 </div>
 	<?php 
-	echo '<img style="position:relative;width:250px;height:380px;border-radius: 10px;box-shadow: 1px 1px 8px #000;" src="//pictures.timeflix.net/posters/'.$film['id_moviedb'].'.jpg"/>
+	echo '<img style="position:relative;width:250px;height:380px;border-radius: 10px;box-shadow: 1px 1px 8px #000;" src="data/posters/'.$film['id_moviedb'].'.jpg"/>
 	</a></br><p style="margin-left:10px;margin-top:5px;text-shadow: 0 2px 0 #000;font-weight: bold;text-transform: uppercase;">'.$film['title'].'<br>
 	<span class="label label-success">'.substr($film['release_date'],0,4).'</span> <span class="label label-info">'.$film['note'].'/10</span>  <span class="label label-warning"><span class="fa fa-eye"></span> '.get_view_movies($id_movies).'</span></p></div>'; 
 }

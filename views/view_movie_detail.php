@@ -44,7 +44,7 @@
       </div>
        <div class="col-md-9">
       <video  id="player" style="width: 100%;border-radius: 10px;box-shadow: 1px 1px 8px #000;" controls preload="none">
-  <source src="<?php echo secure_link('/public/'.$movie_detail['hash'].'.mp4'); ?>" type="video/mp4">
+  <source src="<?php echo secure_link('/video/'.$movie_detail['hash'].'.mp4'); ?>" type="video/mp4">
 </video>
 <br><br>
       <p style="font-size:30px;text-transform: uppercase;font-weight: 300;">

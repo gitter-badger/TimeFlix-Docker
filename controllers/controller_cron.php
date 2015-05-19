@@ -145,7 +145,7 @@ while(1)
 			$args = $encoding['h264_args'];
 		}
 		echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;
-		echo exec('ffmpeg -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfaac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
+		echo exec('~/bin/ffmpeg -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
 		$req = $bdd->exec("UPDATE files_movies SET encoding_mp4='2' WHERE id_file_movies=$id");
 		$shot = array('10','15','20','30','40','50','55','60','70','80','90','100');
 		foreach ($shot as $value)
@@ -176,7 +176,7 @@ while(1)
 		if (strpos($file,'VOSTFR') !== false)
 		{
 			echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;
-			echo exec('ffmpeg -y -i  data/downloads/'.$file.' '.$args.' -vf subtitles='.$sub.' -codec:a libvorbis -b:a 320k -c:a libfaac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
+			echo exec('~/bin/ffmpeg -y -i  data/downloads/'.$file.' '.$args.' -vf subtitles='.$sub.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
 			$req = $bdd->exec("UPDATE episode_serie SET encoding_mp4='2' WHERE id_episode=$id");
 		}
 		else
