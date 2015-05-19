@@ -46,8 +46,10 @@ $( "#contenu" ).load("<?php echo $url; ?>");
 setInterval(function() {
       $( "#contenu" ).load("<?php echo $url; ?>");
 }, 2000);
+$('#active_torrent').switcher({ theme: 'square' });
+$('#active_encodage').switcher({ theme: 'square' });
+$('#active_encodage_st').switcher({ theme: 'square' });
 $('#switcher-disabled-square').switcher({ theme: 'square' });
-$('#switcher-disabled-square1').switcher({ theme: 'square' });
 $(window).load(function(){
 $("#wait").hide();
 $("#loading").fadeIn();

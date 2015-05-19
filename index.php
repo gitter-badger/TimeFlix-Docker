@@ -35,6 +35,12 @@ include_once ("core/core.torrent.encode.php");
 //GEOIP LIB 
 include("library/geoip/geoipcity.inc");
 include("library/geoip/geoipregionvars.php");
+
+//Récupéation de la config
+$right = get_data('config',"WHERE id_config=1");
+$right = array_shift($right);
+$moviedb_api = $right['moviedb_api'];
+
 $gi = geoip_open(realpath("library/geoip/GeoLiteCity.dat"),GEOIP_STANDARD);
 
 

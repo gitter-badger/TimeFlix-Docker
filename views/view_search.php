@@ -208,9 +208,11 @@ echo '</div>';
       {
         if(!empty($actor->profile_path))
         {
-          echo '<img src="https://image.tmdb.org/t/p/w45'.$actor->profile_path.'" alt="" class="actor">';
+          echo '<img src="https://image.tmdb.org/t/p/w92'.$actor->profile_path.'" alt="" class="actor">';
         }
       }
+      if($right['torrent_active'] == 1)
+              {
       ?>
        <p style="font-size:30px;text-transform: uppercase;font-weight: 300;margin-top:2%;">
         <span class="fa fa-cloud-download"></span>&nbsp;&nbsp;Téléchargement (Titre francais)
@@ -257,8 +259,7 @@ else
 {
   echo '<center style="text-transform: uppercase;font-weight: 300;">Aucune données de disponible ..</center>';
 }
-if($_SESSION['id_users'] == 1)
-              {
+
               ?> 
                      <p style="font-size:30px;text-transform: uppercase;font-weight: 300;margin-top:2%;">
         <span class="fa  fa-cloud-upload"></span>&nbsp;&nbsp;Envoyer votre torrent
@@ -266,9 +267,9 @@ if($_SESSION['id_users'] == 1)
 <form enctype="multipart/form-data" action="?view=add_movie&id_movie=<?php echo core_encrypt_decrypt('encrypt',$_GET['id_movie']); ?>" method="post">
  <div class="form-group" style="text-transform: none;text-shadow:none;">
     <input type="file" name="torrent" type="file" id="styled-finputs-example">
-  </div>
-          <input style="float:right" type="submit" class="btn btn-default" name="upload_ok" value="Ajouter"/>
-
+  </div></br>
+    <input style="float:right" type="submit" class="btn btn-default" name="upload_ok" value="Ajouter"/>
+  
 </form>
 
               <?php

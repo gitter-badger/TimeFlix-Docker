@@ -3,21 +3,120 @@
 		<a href="index.php?view=admin&for=users" class="list-group-item"><i class="fa fa-users list-group-icon"></i>Utilisateurs</a>
 		<a href="index.php?view=admin&for=files" class="list-group-item"><i class="fa fa-tasks list-group-icon"></i>Fichiers</a>
 		<a href="index.php?view=admin&for=stats" class="list-group-item"><i class="fa fa-signal list-group-icon"></i>Statistique</a>
-		<a href="index.php?view=admin&for=config" class="list-group-item"><i class="fa fa-cogs list-group-icon"></i>Configuration</a>
+		<a href="index.php?view=admin&for=logs" class="list-group-item"><i class="fa fa-flask list-group-icon"></i>Logs</a>
+		<a href="index.php?view=admin&for=config" class="list-group-item"><i class="fa fa-cogs list-group-icon"></i>Configuration TimeFlix</a>
 		<a href="index.php?view=admin&for=update" class="list-group-item"><i class="fa fa-cloud-download list-group-icon"></i>Mise à jour</a>
       </div>
 
 <div class="col-md-10" style="background-color: #fff:padding:1%;">
 <?php 
 if($_GET['for'] == 'config')
-	{?>
+	{
+		?>
+	<form method="post" action="index.php?view=admin&for=config">
 		<div class="panel">
 		<div class="panel-heading">
-			<span class="panel-title"><i class="fa fa-cogs list-group-icon"></i> Configuration</span>
+			<span class="panel-title"><i class="fa fa-cogs list-group-icon"></i> Configuration TimeFlix</span>
 		</div>
 		<div class="panel-body">
-			<!-- <div class="note note-info">More info and examples at <a href="http://www.oesmith.co.uk/morris.js/" target="_blank">http://www.oesmith.co.uk/morris.js/</a></div> -->
+<div class="col-md-4">
+					<div class="panel-heading">
+						<span class="panel-title">Fonctionnalités</span>
+					</div>
+					<div class="panel-body no-padding-hr">
+						<div class="form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
+							<div class="row">
+								<label class="col-sm-9 control-label">Activer la recherche torrent :</label>
+								<div class="col-sm-3">
+									<input type="checkbox" name="active_torrent" id="active_torrent" <?php if($right['torrent_active'] == 'on') { echo 'checked="checked"'; } ?>>
+								</div>
+							</div>
+						</div>
+						<div class="form-group no-margin-hr no-margin-b panel-padding-h">
+							<div class="row">
+								<label class="col-sm-9 control-label">Activer l'encodage vidéo :</label>
+								<div class="col-sm-3">
+									<input type="checkbox" name="active_encodage" id="active_encodage" <?php if($right['encodage_mp4'] == 'on') { echo 'checked="checked"'; } ?>>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group no-margin-hr no-margin-b panel-padding-h">
+							<div class="row">
+								<label class="col-sm-9 control-label">Activer l'encodage video sous-titre :</label>
+								<div class="col-sm-3">
+									<input type="checkbox" name="active_encodage_st" id="active_encodage_st" <?php if($right['encodage_sub'] == 'on') { echo 'checked="checked"'; } ?>>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-8">
+					<div class="panel-heading">
+						<span class="panel-title">Lien logiciel</span>
+					</div>
+					<div class="panel-body no-padding-hr">
+						<div class="form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
+							<div class="row">
+								<label class="col-sm-4 control-label">Lien FFMPEG :</label>
+								<div class="col-sm-8">
+									<input type="text" name="ffmpeg" class="form-control" value="<?php echo $right['ffmpeg']; ?>">
+								</div>
+							</div>
+						</div>
+						<div class="form-group no-margin-hr no-margin-b panel-padding-h">
+							<div class="row">
+								<label class="col-sm-4 control-label">Lien SUBLIMINAL :</label>
+								<div class="col-sm-8">
+									<input type="text" name="subliminal" class="form-control" value="<?php echo $right['subliminal']; ?>">
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+					<div style="display: block; clear: both;"></div>
+					<div class="panel-footer text-right">
+						<button class="btn btn-primary">Sauvegarder</button>
+					</div>
+					</form>
+</div>
 
+		</div>
+				</div>
+	<?php 
+}
+if($_GET['for'] == 'logs')
+	{?>
+				<div class="panel">
+		<div class="panel-heading">
+			<span class="panel-title"><i class="fa fa-flask list-group-icon"></i> CORE_ENCODAGE</span>
+		</div>
+		<div class="panel-body">
+		<?php 
+		exec('tail -n 20 logs/system.log',$acces);
+
+		foreach ($acces as $value) {
+			echo $value.'<br>';
+		}
+		?>
+			<div class="graph-container">
+				<div id="connexion-graph" class="graph"></div>
+			</div>
+		</div>
+				</div>
+
+		<div class="panel">
+		<div class="panel-heading">
+			<span class="panel-title"><i class="fa fa-flask list-group-icon"></i> Nginx - Accès vidéo</span>
+		</div>
+		<div class="panel-body">
+		<?php
+				unset($acces); 
+		exec('tail -n 20 /var/log/video.nginx.access.log',$acces);
+
+		foreach ($acces as $value) {
+			echo $value.'<br>';
+		}
+		?>
 			<div class="graph-container">
 				<div id="connexion-graph" class="graph"></div>
 			</div>
@@ -142,7 +241,7 @@ if($_GET['for'] == 'update')
 
 <?php
 }
-if($_GET['for'] == 'users')
+if($_GET['for'] == 'users' OR empty($_GET['for']))
 {
 	?>
 	<form method="post" action="index.php?view=admin&for=users">
