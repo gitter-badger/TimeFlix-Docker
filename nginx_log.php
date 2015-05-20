@@ -1,24 +1,13 @@
-<!--
-
-████████╗██╗███╗   ███╗███████╗███████╗██╗     ██╗██╗  ██╗
-╚══██╔══╝██║████╗ ████║██╔════╝██╔════╝██║     ██║╚██╗██╔╝
-   ██║   ██║██╔████╔██║█████╗  █████╗  ██║     ██║ ╚███╔╝ 
-   ██║   ██║██║╚██╔╝██║██╔══╝  ██╔══╝  ██║     ██║ ██╔██╗ 
-   ██║   ██║██║ ╚═╝ ██║███████╗██║     ███████╗██║██╔╝ ██╗
-   ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝╚═╝  ╚═╝
-                                                          v1-beta
-                                                          
--->
 <?php
 error_reporting(0);
 define('CRYPT_KEY', '*mr6dRQ9T/@5Gn9c!5S-');
 
-include_once('config/settings.php');
+include_once('config/config.php');
 include_once('core/core.crypt.php');
 include_once('core/core_get_data.php');
 include_once('core/core_get_moviedb.php');
 echo 'Starting daemon apache_log'.PHP_EOL;
-$fichier_log = '/var/log/pictures.nginx.access.log';
+$fichier_log = '/var/log/video.nginx.access.log';
 while(1)
 {
 	$handle = fopen($fichier_log, 'r');

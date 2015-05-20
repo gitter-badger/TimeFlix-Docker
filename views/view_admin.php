@@ -12,6 +12,42 @@
 <?php 
 if($_GET['for'] == 'config')
 	{
+		if(!empty($_POST['ffmpeg']))
+		{
+			$ffmpeg = $_POST['ffmpeg'];
+			$subliminal = $_POST['subliminal'];
+			$moviedb_api = $_POST['api'];
+			if($_POST['active_torrent'])
+			{
+				$req = $bdd->exec("UPDATE config SET torrent_active='on' WHERE id_config=1");
+			}
+			else
+			{
+				$req = $bdd->exec("UPDATE config SET torrent_active='off' WHERE id_config=1");
+			}
+			if($_POST['active_encodage'])
+			{
+				$req = $bdd->exec("UPDATE config SET encodage_mp4='on' WHERE id_config=1");
+			}
+			else
+			{
+				$req = $bdd->exec("UPDATE config SET encodage_mp4='off' WHERE id_config=1");
+			}
+			if($_POST['active_encodage_st'])
+			{
+				$req = $bdd->exec("UPDATE config SET encodage_sub='on' WHERE id_config=1");
+			}
+			else
+			{
+				$req = $bdd->exec("UPDATE config SET encodage_sub='off' WHERE id_config=1");
+			}
+			$req = $bdd->exec("UPDATE config SET ffmpeg='$ffmpeg',subliminal='$subliminal',moviedb_api='$moviedb_api' WHERE id_config=1");
+			// set de nouveau les droits. 
+			$right = get_data('config',"WHERE id_config=1");
+			$right = array_shift($right);
+			$moviedb_api = $right['moviedb_api'];
+			echo '<div class="alert alert-success" role="alert"><b>Parfait</b>, Modification effectuée.</div>';
+		}
 		?>
 	<form method="post" action="index.php?view=admin&for=config">
 		<div class="panel">
@@ -72,11 +108,44 @@ if($_GET['for'] == 'config')
 							</div>
 						</div>
 					</div>
+							<div class="form-group no-margin-hr no-margin-b panel-padding-h">
+							<div class="row">
+								<label class="col-sm-4 control-label">CLE API MovieDB :</label>
+								<div class="col-sm-8">
+									<input type="text" name="api" class="form-control" value="<?php echo $right['moviedb_api']; ?>">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+					<div class="panel-heading">
+						<span class="panel-title">Sous-Titre "addic7ed"</span>
+					</div>
+					<div class="panel-body no-padding-hr">
+						<div class="alert alert-info" role="alert"><b>Pourquoi "addic7ed"</b>, Sous-titre de qualité et surtout sans décalage et de traduction version google traduction !</div>
+						<div class="form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
+							<div class="row">
+								<label class="col-sm-4 control-label">Username :</label>
+								<div class="col-sm-8">
+									<input type="text" name="addic7ed-username" class="form-control" value="<?php echo $right['addic7ed-username']; ?>">
+								</div>
+							</div>
+						</div>
+						<div class="form-group no-margin-hr no-margin-b panel-padding-h">
+							<div class="row">
+								<label class="col-sm-4 control-label">Password :</label>
+								<div class="col-sm-8">
+									<input type="password" name="addic7ed-password" class="form-control" value="<?php echo $right['addic7ed-password']; ?>">
+								</div>
+							</div>
+						</div>
+					</div>
 					</div>
 					<div style="display: block; clear: both;"></div>
 					<div class="panel-footer text-right">
 						<button class="btn btn-primary">Sauvegarder</button>
 					</div>
+
 					</form>
 </div>
 
@@ -86,21 +155,18 @@ if($_GET['for'] == 'config')
 }
 if($_GET['for'] == 'logs')
 	{?>
-				<div class="panel">
+<div class="panel">
 		<div class="panel-heading">
 			<span class="panel-title"><i class="fa fa-flask list-group-icon"></i> CORE_ENCODAGE</span>
 		</div>
-		<div class="panel-body">
-		<?php 
+		<div class="panel-body" style="background: #000;">
+		<p style="color: #63de00!important;font-family: Andale Mono, monospace;"><?php 
 		exec('tail -n 20 logs/system.log',$acces);
 
 		foreach ($acces as $value) {
 			echo $value.'<br>';
 		}
-		?>
-			<div class="graph-container">
-				<div id="connexion-graph" class="graph"></div>
-			</div>
+		?></p>
 		</div>
 				</div>
 
@@ -108,18 +174,15 @@ if($_GET['for'] == 'logs')
 		<div class="panel-heading">
 			<span class="panel-title"><i class="fa fa-flask list-group-icon"></i> Nginx - Accès vidéo</span>
 		</div>
-		<div class="panel-body">
-		<?php
+		<div class="panel-body" style="background: #000;">
+		<p style="color: #63de00!important;font-family: Andale Mono, monospace;"><?php
 				unset($acces); 
 		exec('tail -n 20 /var/log/video.nginx.access.log',$acces);
 
 		foreach ($acces as $value) {
 			echo $value.'<br>';
 		}
-		?>
-			<div class="graph-container">
-				<div id="connexion-graph" class="graph"></div>
-			</div>
+		?></p>
 		</div>
 				</div>
 	<?php 
@@ -131,7 +194,7 @@ if($_GET['for'] == 'update')
 			<span class="panel-title"><i class="fa fa-cloud-download list-group-icon"></i> Update</span>
 		</div>
 		<div class="panel-body">
-			<div class="alert alert-success" role="alert"><b>Parfait</b>,TimeFlix est à jour. [1.0 beta]</div>
+			<div class="alert alert-success" role="alert"><b>Parfait</b>,TimeFlix est à jour. [<?php echo file_get_contents('VERSION'); ?>]</div>
 
 			<div class="graph-container">
 				<div id="connexion-graph" class="graph"></div>
@@ -320,15 +383,24 @@ if($_GET['for'] == 'files')
 		WHERE movies.status='1' ORDER BY files_movies.encoding_mp4 DESC");
 		foreach($films as $film)
 		{
-			$p_movie = substr(get_data_movie($film['hash']),0,-3);
-			$t_movie = substr(format_bytes(filesize('data/public/'.$film['hash'].'.mp4')),0,-3);
-			$pourcent = $t_movie * $p_movie / 100;
+			$p_movie = get_data_movie_bits($film['hash']);
+			//echo $p_movie;
+			//$p_movie = str_replace('.',',',$p_movie);
+			$t_movie = filesize('data/public/'.$film['hash'].'.mp4');
+			//echo $t_movie;
+			//$t_movie = str_replace('.',',',$t_movie);
+			$pourcent = $p_movie / $t_movie * 100;
+			$label = 'success';
+			if($pourcent < 100)
+			{
+				$label = 'danger';
+			}
 		?>
 		<tr>
 			<td><?php echo $film['title']; ?></td>
 			<td><?php echo $film['type']; ?></td>
 			<td><?php echo $film['hash']; ?></td>
-			<td><span class="label label-success"><?php echo round($pourcent,1); ?> %</span> (<?php echo format_bytes(filesize('data/public/'.$film['hash'].'.mp4')); ?>)</td>
+			<td><span class="label label-<?php echo $label; ?>"><?php echo round($pourcent,1); ?> %</span> (<?php echo format_bytes(filesize('data/public/'.$film['hash'].'.mp4')); ?>) -> <?php echo get_data_movie($film['hash']); ?> </td>
 		</tr>
 		<?php 
 		}

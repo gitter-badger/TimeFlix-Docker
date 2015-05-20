@@ -5,6 +5,7 @@ echo 'Waiting task'.PHP_EOL;
 function check()
 {
 	global $bdd;	
+	global $right;
 	$list_file = get_data('movies',"
 	INNER JOIN files_movies ON files_movies.id_movies = movies.id_movies WHERE files_movies.status=0");
 	$episode_serie = get_data('episode_serie','WHERE status="0"');
@@ -129,6 +130,11 @@ function check()
 while(1)
 {
 	check();
+	if($right['encodage_mp4'] != 'on')
+	{	
+		sleep(60);
+		continue;
+	}
 	$list_encoding = get_data('files_movies','WHERE status="1" AND encoding_mp4="0"');
 	$list_encoding_serie = get_data('episode_serie','WHERE status="1" AND encoding_mp4="0"');
 	foreach ($list_encoding as $key => $encoding)
@@ -145,7 +151,7 @@ while(1)
 			$args = $encoding['h264_args'];
 		}
 		echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;
-		echo exec('~/bin/ffmpeg -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
+		echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
 		$req = $bdd->exec("UPDATE files_movies SET encoding_mp4='2' WHERE id_file_movies=$id");
 		$shot = array('10','15','20','30','40','50','55','60','70','80','90','100');
 		foreach ($shot as $value)
@@ -176,37 +182,48 @@ while(1)
 		if (strpos($file,'VOSTFR') !== false)
 		{
 			echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;
-			echo exec('~/bin/ffmpeg -y -i  data/downloads/'.$file.' '.$args.' -vf subtitles='.$sub.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
+			echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -vf subtitles='.$sub.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
 			$req = $bdd->exec("UPDATE episode_serie SET encoding_mp4='2' WHERE id_episode=$id");
 		}
 		else
 		{
-			echo 'Check soustitre'.$file.PHP_EOL;
-			echo exec("/usr/local/bin/subliminal $serie$lien/$file -l fr -p addic7ed --addic7ed-username peanutzer --addic7ed-password az01-er02");
-			$dir = explode('/',$file);
-			$filesub = $file;
-			if(count($dir) == 2)
-			{
-				$filesub = $dir[1];
+			if($right['encodage_sub'] == 'on')
+			{	
+				echo 'Check soustitre'.$file.PHP_EOL;
+				echo exec(''.$right['subliminal'].' '.$serie.''.$lien.'/'.$file.' -l fr -p addic7ed --addic7ed-username '.$right['addic7ed-username'].' --addic7ed-password '.$right['addic7ed-password'].'');
+				$dir = explode('/',$file);
+				$filesub = $file;
+				if(count($dir) == 2)
+				{
+					$filesub = $dir[1];
+				}
+				if (strpos($file,'mkv') !== false)
+				{
+				    $sub=str_replace(".mkv", ".fr.srt",$filesub);
+				}
+				if (strpos($file,'mp4') !== false)
+				{
+				    $sub=str_replace(".mp4", ".fr.srt",$filesub);
+				}
+				if (strpos($file,'avi') !== false)
+				{
+				    $sub=str_replace(".avi", ".fr.srt",$filesub);
+				}
+				echo 'UTF8 converting task'.PHP_EOL;
 			}
-			if (strpos($file,'mkv') !== false)
-			{
-			    $sub=str_replace(".mkv", ".fr.srt",$filesub);
-			}
-			if (strpos($file,'mp4') !== false)
-			{
-			    $sub=str_replace(".mp4", ".fr.srt",$filesub);
-			}
-			if (strpos($file,'avi') !== false)
-			{
-			    $sub=str_replace(".avi", ".fr.srt",$filesub);
-			}
-			echo 'UTF8 converting task'.PHP_EOL;
 			//file_put_contents($sub, utf8_encode(file_get_contents($sub)));
 			echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;
-			echo exec('ffmpeg -y -i  data/downloads/'.$file.' '.$args.' -vf subtitles='.$sub.' -codec:a libvorbis -b:a 320k -c:a libfaac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
+
+			if($right['encodage_sub'] == 'on')
+			{	
+				echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -vf subtitles='.$sub.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
+				exec('rm '.$sub.'');
+			}
+			else
+			{
+				echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');	
+			}
 			$req = $bdd->exec("UPDATE episode_serie SET encoding_mp4='2' WHERE id_episode=$id");
-			exec('rm '.$sub.'');
 		}
 		// $shot = array('10','15','20','30','40','50','55','60','70','80','90','100');
 		// foreach ($shot as $value)
@@ -228,5 +245,3 @@ while(1)
 	sleep(10);
 }
 ?>
-
-Daredevil.S01E03.720p.WEBRip.x264-SNEAkY.fr.srt

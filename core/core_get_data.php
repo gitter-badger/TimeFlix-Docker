@@ -211,6 +211,14 @@ function get_data_usage($id_users)
   }
 	return $pourcent;
 }
+function get_data_movie_bits($hash)
+{
+  global $bdd;
+  $req = $bdd->prepare('SELECT SUM( bits ) FROM apache_log WHERE file LIKE "%'.$hash.'%"');
+  $req->execute();
+  $value = $req->fetchAll(); 
+  return $value[0][0];
+}
 function get_data_movie($hash)
 {
 	global $bdd;

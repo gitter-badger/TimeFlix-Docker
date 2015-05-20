@@ -18,14 +18,6 @@ $time = $time[1] + $time[0];
 $start = $time;
 
 include_once('config/config.php');
-try
-{
-    $bdd = new PDO('mysql:host='.$serveur.';dbname='.$bdd.'', ''.$user.'', ''.$password.'');
-}
-catch(Exception $e)
-{
-    die('Erreur : '.$e->getMessage());
-}
 define('CRYPT_KEY', '*mr6dRQ9T/@5Gn9c!5S-');
 include_once('core/core.crypt.php');
 include_once('core/core_get_data.php');
