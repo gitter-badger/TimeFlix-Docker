@@ -43,7 +43,7 @@
       margin-bottom:2%;border-radius: 10px;box-shadow: 1px 1px 8px #000;background-image: url('//pictures.timeflix.net/<?php echo '/posters/'.$movie_detail['id_moviedb'].'.jpg'; ?>'); background-size: cover;">
       </div>
        <div class="col-md-9">
-      <video  id="player" style="width: 100%;border-radius: 10px;box-shadow: 1px 1px 8px #000;" controls preload="none">
+      <video  id="player" style="width: 100%;border-radius: 10px;box-shadow: 1px 1px 8px #000;" controls>
   <source src="<?php echo secure_link('/video/'.$movie_detail['hash'].'.mp4'); ?>" type="video/mp4">
 </video>
 <br><br>
@@ -96,7 +96,7 @@
           border-top:0;
         border-image: linear-gradient(90deg, #1abc9c 15%, #2ecc71 15%, #2ecc71 12%, #3498db 12%, #3498db 32%, #9b59b6 32%, #9b59b6 35%, #34495e 35%, #34495e 55%, #f1c40f 55%, #f1c40f 59%, #e67e22 59%, #e67e22 63%, #e74c3c 63%, #e74c3c 82%, #ecf0f1 82%, #ecf0f1 92%, #95a5a6 92%);border-image-slice: 1;">
         </div>  
-        <center style="padding-bottom: 2%;text-transform: uppercase;padding-top:1%;"> Timeflix 2014 - 2015 <br><?php
+        <center style="padding-bottom: 2%;text-transform: uppercase;padding-top:1%;"> TIMEFLIX<br><?php
 $time = microtime();
 $time = explode(' ', $time);
 $time = $time[1] + $time[0];

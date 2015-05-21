@@ -1,10 +1,12 @@
 <div class="row" style="margin-top:0%;margin-left:2%;margin-right:2%;z-index:100;padding-top:4%;">
       <div class="col-md-2" style="float:left;background-color: #fff;padding:0;border-radius: 2px;box-shadow: 1px 1px 8px #000;">
+     	 <a href="index.php?view=admin&for=users" class="list-group-item"><i class="fa fa-dashboard list-group-icon"></i>Dashboard</a>
 		<a href="index.php?view=admin&for=users" class="list-group-item"><i class="fa fa-users list-group-icon"></i>Utilisateurs</a>
 		<a href="index.php?view=admin&for=files" class="list-group-item"><i class="fa fa-tasks list-group-icon"></i>Fichiers</a>
 		<a href="index.php?view=admin&for=stats" class="list-group-item"><i class="fa fa-signal list-group-icon"></i>Statistique</a>
 		<a href="index.php?view=admin&for=logs" class="list-group-item"><i class="fa fa-flask list-group-icon"></i>Logs</a>
 		<a href="index.php?view=admin&for=config" class="list-group-item"><i class="fa fa-cogs list-group-icon"></i>Configuration TimeFlix</a>
+		<a href="index.php?view=admin&for=mail" class="list-group-item"><i class="fa fa-envelope list-group-icon"></i>Configuration Mail</a>
 		<a href="index.php?view=admin&for=update" class="list-group-item"><i class="fa fa-cloud-download list-group-icon"></i>Mise à jour</a>
       </div>
 
@@ -62,7 +64,7 @@ if($_GET['for'] == 'config')
 					<div class="panel-body no-padding-hr">
 						<div class="form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
 							<div class="row">
-								<label class="col-sm-9 control-label">Activer la recherche torrent :</label>
+								<label class="col-sm-9 control-label">Activer la recherche GetStrike API :</label>
 								<div class="col-sm-3">
 									<input type="checkbox" name="active_torrent" id="active_torrent" <?php if($right['torrent_active'] == 'on') { echo 'checked="checked"'; } ?>>
 								</div>
@@ -201,6 +203,42 @@ if($_GET['for'] == 'update')
 			</div>
 		</div>
 				</div>
+	<?php 
+}
+if($_GET['for'] == 'mail')
+	{?>
+		<div class="panel">
+		<div class="panel-heading">
+			<span class="panel-title"><i class="fa fa-envelope  list-group-icon"></i> Configuration Mail</span>
+		</div>
+		<div class="panel-body">
+<div class="form-group">
+							<label  class="col-sm-2 control-label">SMTP</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="smtp" id="smtp" placeholder="Entrez votre serveur SMTP">
+							</div>
+						</div>
+						<div class="form-group">
+						<label  class="col-sm-2 control-label">Port</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="port" id="port" placeholder="Entrez le numéro de port">
+							</div>
+						</div>
+							<div class="form-group">
+							<label  class="col-sm-2 control-label">Email</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="email" id="mail" placeholder="Email de login">
+							</div>
+						</div>
+						<div class="form-group">
+							<label  class="col-sm-2 control-label">Mot de passe</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" id="inputPassword" placeholder="Mot de passe ">
+							</div>
+						</div>
+						<div class="panel-footer text-right">
+		<button type="submit" class="btn btn-primary">Sauvegarder & Tester</button>
+</div>
 	<?php 
 }
 	 if($_GET['for'] == 'stats')
@@ -355,13 +393,38 @@ if($_GET['for'] == 'users' OR empty($_GET['for']))
 	}
 	?>
 </table>
-</div>
 	<?php
 		}
-if($_GET['for'] == 'files' AND isset($_GET['id_movies']))
+		if($_GET['for'] == 'files' AND isset($_GET['id_movies']))
 {
-		print_r($_POST);
+?>
+<form method="post" action="index.php?view=admin&for=files&id_movies=<?php echo $id; ?>">
+<div class="panel">
+<div class="panel-heading">
+	<span class="panel-title"><i class="fa fa-tasks list-group-icon"></i>Détail film</span>
+</div>
+<div class="panel-body">
+<?php 
 		$id = $_GET['id_movies'];
+		if($_GET['action'] == 'delete')
+		{
+			$bdd->exec("DELETE FROM files_movies WHERE id_movies=$id");
+			$bdd->exec("DELETE FROM movies WHERE id_movies=$id");
+			if(!empty($_GET['hash']))
+			{
+				exec('rm data/public/'.$_GET['hash'].'.mp4');
+				header('Location: index.php?view=admin&for=files');     
+			}
+		}
+		if(!empty($_POST))
+		{
+			$synopsis = utf8_decode($_POST['syno']);
+			$encodage = $_POST['encodage'];
+			$file = $_POST['file'];
+			$bdd->exec("UPDATE movies SET synopsis='$synopsis' WHERE id_movies=$id");
+			$bdd->exec("UPDATE files_movies SET encoding_mp4='$encodage',name='$file' WHERE id_movies=$id");
+			echo '<div class="alert alert-success" role="alert"><b>Parfait</b>, Modification effectuée.</div>';
+		}
 		$films = get_data('movies',"
 		INNER JOIN files_movies ON files_movies.id_movies = movies.id_movies
 		WHERE movies.id_movies='$id'");
@@ -370,16 +433,10 @@ if($_GET['for'] == 'files' AND isset($_GET['id_movies']))
 		$check = NULL;
 		if($film['encoding_mp4'] == 2)
 		{
-			$check='checked';
+			$check='selected';
 		}
 ?>
-<form method="post" action="index.php?view=admin&for=files&id_movies=<?php echo $id; ?>">
-<div class="panel">
-<div class="panel-heading">
-	<span class="panel-title"><i class="fa fa-tasks list-group-icon"></i>Détail film</span>
-</div>
-<div class="panel-body">
-<legend><?php echo $film['title']; ?></legend>
+<legend><?php echo $film['title']; ?><a style="float:right" class="btn btn-danger btn-xs" href="index.php?view=admin&for=files&id_movies=2&action=delete&hash=<?php echo $film['hash']; ?>">Supprimer</a></legend>
 <div class="form-group">
 						<div class="form-group">
 							<label for="asdasdas" class="col-sm-2 control-label">Synopsis</label>
@@ -411,11 +468,11 @@ if($_GET['for'] == 'files' AND isset($_GET['id_movies']))
 									</select>
 							</div>
 							</div>
-						<div class="form-group">
+	<!-- 					<div class="form-group">
 							<label class="col-sm-2 control-label">En ligne </label>
 							<div class="col-sm-10">
 								<input name="status" type="checkbox" id="status" checked="checked">&nbsp;&nbsp;
-						</div> 
+						</div>  -->
 					
 </div>
 <legend>Images</legend>
@@ -440,6 +497,7 @@ if($_GET['for'] == 'files' AND !isset($_GET['id_movies']))
 	<span class="panel-title"><i class="fa fa-tasks list-group-icon"></i> Fichiers</span>
 </div>
 <div class="panel-body">
+<legend>Films</legend>
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -478,6 +536,35 @@ if($_GET['for'] == 'files' AND !isset($_GET['id_movies']))
 		<?php 
 		}
 		?>
+		</tbody>
+</table>
+<legend>Episodes</legend>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Title</th>
+			<th>Type</th>
+			<th>Hash</th>
+			<th>Status</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php 
+		$episodes = get_data('episode_serie',"ORDER BY date_add DESC");
+		foreach($episodes as $episode)
+		{
+		?>
+		<tr>
+			<td><?php echo $episode['file']; ?></a></td>
+			<td><?php echo $episode['type']; ?></td>
+			<td><?php echo $episode['hash']; ?></td>
+			<td><?php echo $episode['encoding_mp4']; ?></td>
+		</tr>
+		<?php 
+		}
+		?>
+		</tbody>
 </table>
 <?php
 }
@@ -497,7 +584,7 @@ border-right:0;
 border-image: linear-gradient(90deg, #1abc9c 15%, #2ecc71 15%, #2ecc71 12%, #3498db 12%, #3498db 32%, #9b59b6 32%, #9b59b6 35%, #34495e 35%, #34495e 55%, #f1c40f 55%, #f1c40f 59%, #e67e22 59%, #e67e22 63%, #e74c3c 63%, #e74c3c 82%, #ecf0f1 82%, #ecf0f1 92%, #95a5a6 92%);border-image-slice: 1;">
 </div>  
         <center style="padding-bottom: 2%;text-transform: uppercase;padding-top:1%;font-size:15px;color:white;">
-        Timeflix 2014 - 2015 <br><?php
+        TIMEFLIX<br><?php
 $time = microtime();
 $time = explode(' ', $time);
 $time = $time[1] + $time[0];
