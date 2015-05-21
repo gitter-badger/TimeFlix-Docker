@@ -259,7 +259,7 @@ else
 {
   echo '<center style="text-transform: uppercase;font-weight: 300;">Aucune données de disponible ..</center>';
 }
-
+}
               ?> 
                      <p style="font-size:30px;text-transform: uppercase;font-weight: 300;margin-top:2%;">
         <span class="fa  fa-cloud-upload"></span>&nbsp;&nbsp;Envoyer votre torrent
@@ -271,15 +271,12 @@ else
     <input style="float:right" type="submit" class="btn btn-default" name="upload_ok" value="Ajouter"/>
   
 </form>
-
-              <?php
-            }
-?>            <div style="margin-top:5%;border-left:0;
+      <div style="margin-top:5%;border-left:0;
         border-right:0;
           border-top:0;
         border-image: linear-gradient(90deg, #1abc9c 15%, #2ecc71 15%, #2ecc71 12%, #3498db 12%, #3498db 32%, #9b59b6 32%, #9b59b6 35%, #34495e 35%, #34495e 55%, #f1c40f 55%, #f1c40f 59%, #e67e22 59%, #e67e22 63%, #e74c3c 63%, #e74c3c 82%, #ecf0f1 82%, #ecf0f1 92%, #95a5a6 92%);border-image-slice: 1;">
         </div>  
-        <center style="padding-bottom: 2%;text-transform: uppercase;padding-top:1%;"> Timeflix 2014 - 2015 <br><?php
+        <center style="padding-bottom: 2%;text-transform: uppercase;padding-top:1%;"> TIMEFLIX<br><?php
 $time = microtime();
 $time = explode(' ', $time);
 $time = $time[1] + $time[0];
