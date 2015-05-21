@@ -190,19 +190,53 @@ if($_GET['for'] == 'logs')
 	<?php 
 }
 if($_GET['for'] == 'update')
-	{?>
-		<div class="panel">
-		<div class="panel-heading">
-			<span class="panel-title"><i class="fa fa-cloud-download list-group-icon"></i> Update</span>
-		</div>
-		<div class="panel-body">
-			<div class="alert alert-success" role="alert"><b>Parfait</b>,TimeFlix est à jour. [<?php echo file_get_contents('VERSION'); ?>]</div>
+	{
+		if($_GET['action'] == 'pull')
+		{
+			$retour = array();
+			exec('git pull',$retour);
+			?>
+			<div class="alert alert-info" role="alert"><b>Rapport de mise à jour ! </b> </br>
+			<?php foreach ($retour as  $value) {
+				echo $value;
+				echo '<br>';
+			} ?></div>
+			<?php
+		}
+$xml=simplexml_load_file("http://gitlab.timeflix.net/root/timeflixdocker/commits/master.atom?private_token=iNJngj5ZNRs98CzqtxKd") or die("Error: Cannot create object");
+$retour = array();
+exec('git rev-parse HEAD',$retour);
+$head = $retour['0'];
+$depo = substr($xml->entry->id,-40);
+$update = '<div class="alert alert-warning" role="alert"><b>Attention</b> Votre version n\'est pas à jour ! <a href="index.php?view=admin&for=update&action=pull" class="btn btn-xs btn-warning" style="float:right;">
+Mettre à jour</a></div>';
+if($head == $depo)
+{
+	$update = '<div class="alert alert-success" role="alert"><b>Excelent ! </b> Votre version est à jour ! </div>';
+}
+echo $update;
+?>
+<div class="panel widget-messages-alt">
+					<div class="panel-heading">
+						<span class="panel-title"><i class="fa fa-cloud-download list-group-icon"></i> Update</span>
+					</div> <!-- / .panel-heading -->
+					<div class="panel-body padding-sm">
+						<div class="messages-list">
+						<?php
+					foreach ($xml->entry as $key => $value) {
+						?>
+							<div class="message">
+								<img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/128/Apps-system-software-update-icon.png" alt="" class="message-avatar">
+								<a href="#" class="message-subject"><?php echo $value->title; ?></a>
+								<div class="message-description">
+									from <a href="#"><?php echo $value->author->name; ?></a>
+									&nbsp;&nbsp;·&nbsp;&nbsp;
+									<?php echo temps_ecoule($value->updated,'date'); ?>
+								</div> 
+							</div> 
 
-			<div class="graph-container">
-				<div id="connexion-graph" class="graph"></div>
-			</div>
-		</div>
-				</div>
+							<?php } ?>
+						</div>
 	<?php 
 }
 if($_GET['for'] == 'mail')
@@ -352,7 +386,7 @@ if($_GET['for'] == 'users' OR empty($_GET['for']))
 					</div>
 					<div class="panel-body">
 <legend>Envoyer une invitation</legend>
-<div class="alert alert-warning" role="alert"><b>Attention !</b>,  Cette fonctionnalité nécessite configuration mail.</div>
+<div class="alert alert-warning" role="alert"><b>Attention !</b>  Cette fonctionnalité nécessite configuration mail.</div>
   <div class="form-group">
     <label for="exampleInputEmail1">Adresse email</label>
     <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Entrez un email valide">
