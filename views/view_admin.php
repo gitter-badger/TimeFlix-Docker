@@ -57,7 +57,7 @@ if($_GET['for'] == 'config')
 		<div class="panel-body">
 <div class="col-md-4">
 					<div class="panel-heading">
-						<span class="panel-title">Fonctionnalités</span>
+						<span class="panel-title">Encodage</span>
 					</div>
 					<div class="panel-body no-padding-hr">
 						<div class="form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
@@ -141,11 +141,11 @@ if($_GET['for'] == 'config')
 						</div>
 					</div>
 					</div>
+
 					<div style="display: block; clear: both;"></div>
 					<div class="panel-footer text-right">
 						<button class="btn btn-primary">Sauvegarder</button>
 					</div>
-
 					</form>
 </div>
 
@@ -314,6 +314,7 @@ if($_GET['for'] == 'users' OR empty($_GET['for']))
 					</div>
 					<div class="panel-body">
 <legend>Envoyer une invitation</legend>
+<div class="alert alert-warning" role="alert"><b>Attention !</b>,  Cette fonctionnalité nécessite configuration mail.</div>
   <div class="form-group">
     <label for="exampleInputEmail1">Adresse email</label>
     <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Entrez un email valide">
@@ -330,12 +331,13 @@ if($_GET['for'] == 'users' OR empty($_GET['for']))
 			<th>User agent</th>
 			<th>IP</th>
 			<th>Data usage</th>
+			<th>Status</th>
 		</tr>
 	</thead>
 	<tbody>
 		<?php 
 		$users = get_data('users',"");
-		foreach($users as $user)
+		foreach($users as $user)	
 		{
 			$log = get_data('logs',"WHERE id_users='".$user['id_users']."' ORDER BY date_add DESC LIMIT 1");
 			$record = geoip_record_by_addr($gi,$log[0]['adresse_ip']);
@@ -347,19 +349,90 @@ if($_GET['for'] == 'users' OR empty($_GET['for']))
 			<td><?php echo $log[0]['useragent']; ?></td>
 			<td><?php echo $log[0]['adresse_ip']; ?> <span class="label label-info"><?php echo utf8_encode($record->city); ?></span></td>
 			<td><?php echo get_data_usage($user['id_users']); ?></td>
+			<td><?php echo $user['status']; ?></td>
 		</tr>
 		<?php
 	}
 	?>
 </table>
-<div class="graph-container">
-							<div id="connexion-graph" class="graph"></div>
-						</div>
-					</div>
-				</div>
+</div>
 	<?php
 		}
-if($_GET['for'] == 'files')
+if($_GET['for'] == 'files' AND isset($_GET['id_movies']))
+{
+		print_r($_POST);
+		$id = $_GET['id_movies'];
+		$films = get_data('movies',"
+		INNER JOIN files_movies ON files_movies.id_movies = movies.id_movies
+		WHERE movies.id_movies='$id'");
+		$film = array_shift($films);
+		$back = get_data('backgrounds','WHERE id_movies='.$film['id_moviedb'].'');
+		$check = NULL;
+		if($film['encoding_mp4'] == 2)
+		{
+			$check='checked';
+		}
+?>
+<form method="post" action="index.php?view=admin&for=files&id_movies=<?php echo $id; ?>">
+<div class="panel">
+<div class="panel-heading">
+	<span class="panel-title"><i class="fa fa-tasks list-group-icon"></i>Détail film</span>
+</div>
+<div class="panel-body">
+<legend><?php echo $film['title']; ?></legend>
+<div class="form-group">
+						<div class="form-group">
+							<label for="asdasdas" class="col-sm-2 control-label">Synopsis</label>
+							<div class="col-sm-10">
+								<textarea name="syno" class="form-control"><?php echo utf8_encode($film['synopsis']); ?></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputEmail2" class="col-sm-2 control-label">Lien fichier</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="file" value="<?php echo $film['name']; ?>">
+							</div>
+						</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Encoder </label>
+							<div class="col-sm-10">
+												<?php if (file_exists('data/public/'.$film['hash'].'.mp4')) 
+								{
+								echo '<p class="help-block" style="color:green;">Le ficher est disponible !</p>';
+								}
+								else
+								{
+									echo '<p class="help-block" style="color:red;">Le ficher est indisponible ! </p>';
+								}
+								?>
+									<select name="encodage" class="form-control form-group-margin">
+										<option value="0">En attente encodage</option>
+										<option value="2" <?php echo $check; ?>>Fichier encoder</option>
+									</select>
+							</div>
+							</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">En ligne </label>
+							<div class="col-sm-10">
+								<input name="status" type="checkbox" id="status" checked="checked">&nbsp;&nbsp;
+						</div> 
+					
+</div>
+<legend>Images</legend>
+<?php 
+foreach ($back as $key => $value) 
+{
+	echo '<img style="height:250px;margin:1%;" src="data/backgrounds'.$value['file'].'" alt="..." class="img-thumbnail">';
+}
+?>
+</div>
+<div class="panel-footer text-right">
+		<button type="submit" class="btn btn-primary">Sauvegarder</button>
+</div>
+</form>
+<?php
+}
+if($_GET['for'] == 'files' AND !isset($_GET['id_movies']))
 {
 	?>
 <div class="panel">
@@ -397,7 +470,7 @@ if($_GET['for'] == 'files')
 			}
 		?>
 		<tr>
-			<td><?php echo $film['title']; ?></td>
+			<td><a href="index.php?view=admin&for=files&id_movies=<?php echo $film['id_movies']; ?>"><?php echo $film['title']; ?></a></td>
 			<td><?php echo $film['type']; ?></td>
 			<td><?php echo $film['hash']; ?></td>
 			<td><span class="label label-<?php echo $label; ?>"><?php echo round($pourcent,1); ?> %</span> (<?php echo format_bytes(filesize('data/public/'.$film['hash'].'.mp4')); ?>) -> <?php echo get_data_movie($film['hash']); ?> </td>
@@ -416,5 +489,23 @@ if($_GET['for'] == 'files')
 <button type="button" class="btn btn-default">Invitation</button>
 <button type="button" class="btn btn-default">Users</button>
 </div>
--->
+--></div></div>
+<div style="display: block; clear: both;"></div>
+<div style="margin-top:5%;border-left:0;width: 95%;
+border-right:0;
+  border-top:0;
+border-image: linear-gradient(90deg, #1abc9c 15%, #2ecc71 15%, #2ecc71 12%, #3498db 12%, #3498db 32%, #9b59b6 32%, #9b59b6 35%, #34495e 35%, #34495e 55%, #f1c40f 55%, #f1c40f 59%, #e67e22 59%, #e67e22 63%, #e74c3c 63%, #e74c3c 82%, #ecf0f1 82%, #ecf0f1 92%, #95a5a6 92%);border-image-slice: 1;">
+</div>  
+        <center style="padding-bottom: 2%;text-transform: uppercase;padding-top:1%;font-size:15px;color:white;">
+        Timeflix 2014 - 2015 <br><?php
+$time = microtime();
+$time = explode(' ', $time);
+$time = $time[1] + $time[0];
+$finish = $time;
+$total_time = round(($finish - $start), 4);
+echo '<p style=" font-size:9px;">';
+echo 'Générer en '.$total_time.' seconds - Mem : '.format_bytes(memory_get_usage(true)).'</p>';
+?></center>
+      </div>
+</div></div>
 </div>

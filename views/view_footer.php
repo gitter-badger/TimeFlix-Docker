@@ -50,6 +50,12 @@ $('#active_torrent').switcher({ theme: 'square' });
 $('#active_encodage').switcher({ theme: 'square' });
 $('#active_encodage_st').switcher({ theme: 'square' });
 $('#switcher-disabled-square').switcher({ theme: 'square' });
+$('#status').switcher({
+				theme: 'square',
+				on_state_content: '<span class="fa fa-check"></span>',
+				off_state_content: '<span class="fa fa-times"></span>'
+			});
+
 $(window).load(function(){
 $("#wait").hide();
 $("#loading").fadeIn();

@@ -19,16 +19,30 @@
 
 <body class="theme-frost page-signin-alt lazy" data-original="//pictures.timeflix.net/backgrounds<?php echo $img; ?>" style="background-attachment: fixed;background-size: cover;background-color: white;">
 <div id="login">
-        <form action="" method="post" id="signin-form_id" class="panel" style="float:right;margin-right: 5%;box-shadow: 1px 1px 12px rgba(0,0,0,1);margin-top:18%;background:rgba(0,0,0,0.8);border:0;">
-<!--         		<p style="font-size:30px;text-transform: uppercase;font-weight: 300;color:white;text-shadow: 0 2px 0 #000;text-align: center;">
+
+		<form action="" method="post" id="signin-form_new" class="panel" style="display:none;float:right;margin-right: 5%;box-shadow: 1px 1px 12px rgba(0,0,0,1);margin-top:16.5%;background:rgba(0,0,0,0.8);border:0;">
+       		<p style="font-size:30px;text-transform: uppercase;font-weight: 300;color:white;text-shadow: 0 2px 0 #000;text-align: center;padding-bottom: 10px;">
+				Inscription 
+				<p>
+		<div class="form-group">
+			<input type="text" name="inc_username" id="inc_username" class="form-control input-lg" placeholder="Votre adresse mail">
+		</div> <!-- / Username -->
+
+		<div class="form-group signin-password">
+			<input type="password" name="inc_password" id="inc_password" class="form-control input-lg" placeholder="Votre mot de passe">
+			<!-- <a href="#" class="forgot">Perdu ? </a>-->
+		</div> <!-- / Password -->
+
+		<div class="form-actions">
+			<input type="submit" value="Inscription" class="btn btn-success btn-block btn-lg">
+		</div> <!-- / .form-actions -->
+	</form>
+
+
+        <form action="" method="post" id="signin-form_id" class="panel" style="float:right;margin-right: 5%;box-shadow: 1px 1px 12px rgba(0,0,0,1);margin-top:15.5%;background:rgba(0,0,0,0.8);border:0;">
+         	<p style="font-size:30px;text-transform: uppercase;font-weight: 300;color:white;text-shadow: 0 2px 0 #000;text-align: center;padding-bottom: 10px;">
 				Authentification 
-				<p> -->
-	<?php 
-	if(isset($auth) and $auth == 'NOK')
-	{
-		echo '<div class="alert alert-danger">Utilisateur / Mot de passe incorrect </div>';
-	}
-	?>
+				<p> 
 		<div class="form-group">
 			<input type="text" name="username" id="username" class="form-control input-lg" placeholder="Email">
 		</div> <!-- / Username -->
@@ -41,12 +55,12 @@
 		<div class="form-actions">
 			<input type="submit" value="Connexion" class="btn btn-primary btn-block btn-lg">
 		</div> <!-- / .form-actions -->
+		<a class="btn btn-default btn-block btn-lg" style="margin-top:10px;" id="new" href="#">Inscription</a>
 	</form>
 	<div style="float:right;margin-top: 20.5%;margin-right: 2%;">
 	<p style="font-size:80px;text-transform: uppercase;font-weight: 300;color:white;text-shadow: 0 2px 0 #000;text-align: center;">
 				TIMEFLIX 
 				<p>
-
 </div>
 	</div>
 	<!-- / Form -->
@@ -54,7 +68,7 @@
 
 <div style="position:fixed;height:25px;bottom:0px;left:0px;right:0px;margin-bottom:0px;">
 <p style="font-size:13px;text-transform: uppercase;font-weight: 300;color:white;text-shadow: 0 2px 0 #000;text-align: left;padding-bottom: 2%;padding-left: 0.5%;">
-				TIMEFLIX 2015 - Version 1.0
+				TIMEFLIX 2015
 				<p>
     </div>
 
@@ -66,6 +80,11 @@
 <script src="theme/js/pixel-admin.min.js"></script>
 <div id="size" style="display:none;"></div>
 <script type="text/javascript">
+$("#new").click(function(){
+    $("#signin-form_id").hide();
+    $("#signin-form_new").show();
+    $('#signin-form_new').addClass('animated bounceInRight');
+});
 $("body.lazy").lazyload({
 effect : "fadeIn"
 });

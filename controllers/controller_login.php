@@ -26,7 +26,7 @@ if(!empty($_POST['username']) AND !empty($_POST['password']))
 	$_SESSION['bdd'] = get_bdd();
 	$_SESSION['os'] = $user_os;
 	$_SESSION['browser'] = $user_browser;
-	$_SESSION['ip'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
+	$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
 	$req = $bdd->prepare("INSERT INTO `logs` 
 	(`id_users`, `useragent`, `adresse_ip`) 
 	VALUES
@@ -34,7 +34,7 @@ if(!empty($_POST['username']) AND !empty($_POST['password']))
 	$user_agent =  $user_os.' - '.$user_browser;
 	$req->bindParam(':id_users', $_SESSION['id_users']);
 	$req->bindParam(':useragent', $user_agent);
-	$req->bindParam(':adresse_ip', $_SERVER['HTTP_X_REAL_IP']);
+	$req->bindParam(':adresse_ip', $_SERVER['REMOTE_ADDR']);
 	$req->execute();
 	header('Location: index.php?view=goflix');  
 }

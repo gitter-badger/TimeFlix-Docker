@@ -111,7 +111,7 @@
 		<div class="navbar-inner">
 		
 			<div class="navbar-header">
-				<a href="<?php echo $url; ?>?view=goflix" class="navbar-brand"><?php echo $title; ?> <span class="label label-danger"><?php echo file_get_contents('VERSION'); ?></a>
+				<a href="?view=goflix" class="navbar-brand"><?php echo $title; ?> <span class="label label-danger"><?php echo file_get_contents('VERSION'); ?></a>
 				</a>
 
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse"><i class="navbar-icon fa fa-bars"></i></button>

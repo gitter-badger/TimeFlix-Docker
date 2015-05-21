@@ -10,8 +10,7 @@
                                                           
 -->
 <?php
-
-//error_reporting(0);
+error_reporting(0);
 $time = microtime();
 $time = explode(' ', $time);
 $time = $time[1] + $time[0];
