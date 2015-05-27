@@ -84,7 +84,7 @@
       $vignette = get_data('thumbnail','WHERE id_movies='.$movie_detail['id_movies'].'');
       foreach ($vignette as $value) 
       {
-        echo '<img src="//pictures.timeflix.net/thumbnail/'.$value['file'].'">';
+        echo '<img src="data/thumbnail/'.$value['file'].'">';
       }
       ?>
       </div>

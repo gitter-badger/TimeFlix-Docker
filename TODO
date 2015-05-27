@@ -1,0 +1,9 @@
+
+
+IMPORTANT : 
+  ☐ Terminer les mails avec PHPMailer & le cron (Virer le postFIX de limage docker) @PHPMailer @postFIX
+  ☐ Modifier mon compte en vue admin pour retrouver les paramétrages du compte (changement de mot de passe, email, synthèse) > A REFLECHIR @onvavoir!
+  ☐ Optimiser la partie série (CRON) @php
+  ☐ Vider image de test docker + nettoyage pour vérif poid et post-prod @docker
+  ☐ Import / Export via console admin - Format a réfléchir !! @IMPORTANT @idéedeflowdemerde
+  ☐ Traiter le cas ou les sous titres ne sont pas trouver. 

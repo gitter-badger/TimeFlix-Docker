@@ -35,8 +35,9 @@
         }
       }
       ?>
-      <video  id="player" style="width: 100%;border-radius: 10px;box-shadow: 1px 1px 8px #000;margin-top: 2%" controls>
-  <source src="<?php echo secure_link('/public/'.core_encrypt_decrypt('decrypt',$_GET['hash']).'.mp4'); ?>" type="video/mp4">
+      <video  id="player" style="width: 100%;border-radius: 10px;box-shadow: 1px 1px 8px #000;margin-top: 2%;color;white;" controls>
+  <source src="<?php echo secure_link('/video/'.core_encrypt_decrypt('decrypt',$_GET['hash']).'.mp4'); ?>" type="video/mp4">
+  <track kind="captions" src="data/subtiles/<?php echo core_encrypt_decrypt('decrypt',$_GET['hash']); ?>.vtt" srclang="en" label="French Subtitles" default/>
 </video>
 
             <div style="margin-top:5%;border-left:0;

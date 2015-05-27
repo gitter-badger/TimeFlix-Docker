@@ -11,9 +11,12 @@
 <script src="theme/js/pixel-admin.min.js"></script>
 <script src="theme/js/jquery.film_roll.js"></script>
 <script src="theme/js/pnotify.custom.min.js"></script>
-<script src="theme/js/video.js"></script>
+<script src="theme/js/srt.js"></script>
 <script src="theme/js/time.js"></script>
-<script language="Javascript"> 
+<script language="Javascript"> captionator.captionify(null,null,{debugMode:!!window.location.search.match(/debug/i)});
+	
+	var videoObject = document.getElementsByTagName("video")[0];
+	document.getElementsByClassName("demo")[0].appendChild(generateMediaControls(videoObject));
 	window.PixelAdmin.start(init);
 
 	<?php if($_GET['view'] == 'movie_detail' OR $_GET['view'] == 'episode')
@@ -49,13 +52,15 @@ setInterval(function() {
 $('#active_torrent').switcher({ theme: 'square' });
 $('#active_encodage').switcher({ theme: 'square' });
 $('#active_encodage_st').switcher({ theme: 'square' });
-$('#switcher-disabled-square').switcher({ theme: 'square' });
+$('#notif_email').switcher({ theme: 'square' });
 $('#status').switcher({
 				theme: 'square',
 				on_state_content: '<span class="fa fa-check"></span>',
 				off_state_content: '<span class="fa fa-times"></span>'
 			});
-
+$( "#notif_email" ).change(function() {
+   $("#duration").load("index.php?view=change");
+});
 $(window).load(function(){
 $("#wait").hide();
 $("#loading").fadeIn();
@@ -64,22 +69,3 @@ $("#loading").fadeIn();
 </body>
 </html>
 
-<?php
-if($_SESSION['id_users'] != 1)
-{
-	$time = microtime();
-	$time = explode(' ', $time);
-	$time = $time[1] + $time[0];
-	$finish = $time;
-	$total_time = round(($finish - $start), 4);
-	$url = $_SERVER['REQUEST_URI'];
-	$log = var_export(debug_backtrace(), true);
-	$corps = '<p>Username : '.$_SESSION['adresse_email'].'</p>
-	<p>System : '.$_SESSION['os'].'</p>
-	<p>Browser : '.$_SESSION['browser'].'</p>
-	<p>IP  : '.$_SESSION['ip'].'</p>
-	Excecution time : '.$total_time.'';
-	push_debug('webmaster@timeflix.net','[LOG]['.$url.']['.$_SESSION['adresse_email'].']',$corps,'',
-		'');
-	}
-?>

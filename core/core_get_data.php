@@ -9,7 +9,14 @@ use Transmission\Model\File;
 use Transmission\Model\trackerStats;
 use Transmission\Transmission;
 
-
+try
+{
+    $bdd = new PDO('mysql:host='.$serveur.';dbname='.$bdd.'', ''.$user.'', ''.$password.'');
+}
+catch(Exception $e)
+{
+    die('Erreur : '.$e->getMessage());
+}
 
 define("KILO", 1024);
 define("MEGA", KILO * 1024);
@@ -33,6 +40,26 @@ function get_process($proccess)
   } else {
           return '<span class="label label-success">En ligne</span>';
   }
+}
+function get_process_admin($proccess)
+{
+  exec("ps aux | grep -i '$proccess' | grep -v grep", $pids);
+  if(empty($pids)) {
+          return  false;
+  } else {
+          return true;
+  }
+}
+function user_change()
+{
+  global $bdd;
+  $user = get_data('users','WHERE id_users='.$_SESSION['id_users'].'');
+   $value = 'activer';
+   if($user[0]['notif_email'] == 'activer')
+   {
+     $value = 'desactiver';
+   }
+   $req = $bdd->exec('UPDATE users SET notif_email="'.$value.'" WHERE id_users='.$_SESSION['id_users'].'');
 }
 function get_system()
 {

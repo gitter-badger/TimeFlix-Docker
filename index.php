@@ -10,7 +10,8 @@
                                                           
 -->
 <?php
-error_reporting(0);
+//error_reporting(0);
+
 $time = microtime();
 $time = explode(' ', $time);
 $time = $time[1] + $time[0];
@@ -18,6 +19,8 @@ $start = $time;
 
 include_once('config/config.php');
 define('CRYPT_KEY', '*mr6dRQ9T/@5Gn9c!5S-');
+require_once('library/phpmailer/class.phpmailer.php');
+require_once("library/phpmailer/class.smtp.php"); 
 include_once('core/core.crypt.php');
 include_once('core/core_get_data.php');
 include_once('core/core_get_moviedb.php');
@@ -39,6 +42,11 @@ if (php_sapi_name() == 'cli')
 {	
     include_once('controllers/controller_cron.php');
     exit;
+}
+if (isset($_GET['view']) AND $_GET['view'] == 'install')
+{
+  include_once('controllers/controller_install.php');
+  exit;
 }
 if (isset($_GET['view']) AND $_GET['view'] == 'invitation')
 {
@@ -64,6 +72,11 @@ if(!empty($_SESSION['id_users']))
   	 include_once('views/view_header.php');
       include_once('controllers/controller_movie_detail.php');
       include_once('views/view_footer.php');
+  }
+    elseif (isset($_GET['view']) AND $_GET['view'] == 'change')
+  {
+    user_change();
+    exit();
   }
   elseif (isset($_GET['view']) AND $_GET['view'] == 'serie')
   {
@@ -142,14 +155,6 @@ if(!empty($_SESSION['id_users']))
   {
     download($_GET['file']);
   }
-  // elseif (isset($_GET['view']) AND $_GET['view'] == 'mail')
-  // {
-  //   $link = 'test';
-  //   $corps = '<h1>TimeFlix</h1>
-  //      <div style=\"float:right;margin-right:10px;\" class=\"btn\"><a href=\"" cs-button>Télécharger</a></div>';
-  //   $affiche="http://w3af.org/wp-content/uploads/beta-testin.png";
-  //     echo push_email('jack.gianesini@gmail.com','hah',$corps,$affiche,$link);
-  // }
   else
   {
       include_once('views/view_header.php');

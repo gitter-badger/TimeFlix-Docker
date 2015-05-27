@@ -1,17 +1,282 @@
-<div class="row" style="margin-top:0%;margin-left:2%;margin-right:2%;z-index:100;padding-top:4%;">
+<div class="row" style="margin-top:0%;margin-left:2%;margin-right:2%;z-index:100;padding-top:5%;">
       <div class="col-md-2" style="float:left;background-color: #fff;padding:0;border-radius: 2px;box-shadow: 1px 1px 8px #000;">
-     	 <a href="index.php?view=admin&for=users" class="list-group-item"><i class="fa fa-dashboard list-group-icon"></i>Dashboard</a>
+     	 <a href="index.php?view=admin&for=dashboard" class="list-group-item"><i class="fa fa-dashboard list-group-icon"></i>Dashboard</a>
 		<a href="index.php?view=admin&for=users" class="list-group-item"><i class="fa fa-users list-group-icon"></i>Utilisateurs</a>
 		<a href="index.php?view=admin&for=files" class="list-group-item"><i class="fa fa-tasks list-group-icon"></i>Fichiers</a>
 		<a href="index.php?view=admin&for=stats" class="list-group-item"><i class="fa fa-signal list-group-icon"></i>Statistique</a>
 		<a href="index.php?view=admin&for=logs" class="list-group-item"><i class="fa fa-flask list-group-icon"></i>Logs</a>
 		<a href="index.php?view=admin&for=config" class="list-group-item"><i class="fa fa-cogs list-group-icon"></i>Configuration TimeFlix</a>
-		<a href="index.php?view=admin&for=mail" class="list-group-item"><i class="fa fa-envelope list-group-icon"></i>Configuration Mail</a>
+		<a href="index.php?view=admin&for=mail" class="list-group-item"><i class="fa fa-envelope list-group-icon"></i>Information & Configuration Mail</a>
+		<a href="index.php?view=admin&for=import_export" class="list-group-item"><i class="fa fa-code-fork list-group-icon"></i>Import & Export</a>
 		<a href="index.php?view=admin&for=update" class="list-group-item"><i class="fa fa-cloud-download list-group-icon"></i>Mise à jour</a>
       </div>
 
 <div class="col-md-10" style="background-color: #fff:padding:1%;">
-<?php 
+<?php
+if($_GET['for'] == 'dashboard')
+	{
+		$stock = disk_free_space('/') / disk_total_space('/') * 100;
+
+		?>
+		<div class="panel">
+		<div class="panel-heading">
+			<span class="panel-title"><i class="fa fa-dashboard  list-group-icon"></i> Dashboard</span>
+		</div>
+		<div class="panel-body" style="padding-left:15%;">
+		<script>
+					init.push(function () {
+						// Easy Pie Charts
+						var easyPieChartDefaults = {
+							animate: 2000,
+							scaleColor: false,
+							lineWidth: 6,
+							lineCap: 'square',
+							size: 125,
+							trackColor: '#e5e5e5'
+						}
+						$('#easy-pie-chart-1').easyPieChart($.extend({}, easyPieChartDefaults, {
+							barColor: PixelAdmin.settings.consts.COLORS[1]
+						}));
+						$('#easy-pie-chart-2').easyPieChart($.extend({}, easyPieChartDefaults, {
+							barColor: PixelAdmin.settings.consts.COLORS[1]
+						}));
+						$('#easy-pie-chart-3').easyPieChart($.extend({}, easyPieChartDefaults, {
+							barColor: PixelAdmin.settings.consts.COLORS[1]
+						}));
+					});
+				</script>
+				<div class="row">
+					<div class="col-xs-2">
+						<!-- Centered text -->
+						<div class="stat-panel text-center">
+							<div class="stat-row">
+								<div class="stat-cell bg-primary padding-sm text-xs text-semibold">
+									<i class="fa fa-dashboard"></i>&nbsp;&nbsp;Charge système
+								</div>
+							</div>
+							<div class="stat-row">
+								<div class="stat-cell bordered no-border-t no-padding-hr">
+									<div class="pie-chart" data-percent="<?php echo get_system(); ?>" id="easy-pie-chart-1">
+										<div class="pie-chart-label"><?php echo get_system(); ?> %</div>
+									</div>
+								</div>
+							</div>
+						</div> 
+					</div>
+					<div class="row">
+					<div class="col-xs-2">
+						<!-- Centered text -->
+						<div class="stat-panel text-center">
+							<div class="stat-row">
+								<div class="stat-cell bg-warning padding-sm text-xs text-semibold">
+									<i class="fa fa-dashboard"></i>&nbsp;&nbsp;Stockage (Libre)
+								</div>
+							</div>
+							<div class="stat-row">
+								<div class="stat-cell bordered no-border-t no-padding-hr">
+									<div class="pie-chart" data-percent="<?php echo $stock; ?>" id="easy-pie-chart-2">
+										<div class="pie-chart-label"><?php echo format_bytes(disk_free_space('/')); ?></div>
+									</div>
+								</div>
+							</div>
+						</div> 
+					</div>
+					<div class="row">
+					<div class="col-xs-2">
+						<!-- Centered text -->
+						<div class="stat-panel text-center">
+							<div class="stat-row">
+								<div class="stat-cell bg-danger padding-sm text-xs text-semibold">
+									<i class="fa fa-dashboard"></i>&nbsp;&nbsp;RAM
+								</div>
+							</div>
+							<div class="stat-row">
+								<div class="stat-cell bordered no-border-t no-padding-hr">
+									<div class="pie-chart" data-percent="<?php echo get_memory(); ?>" id="easy-pie-chart-3">
+										<div class="pie-chart-label"><?php echo get_memory(); ?>%</div>
+									</div>
+								</div>
+							</div>
+						</div> 
+					</div>
+						<div class="row">
+					<div class="col-xs-2">
+						<!-- Centered text -->
+						<div class="stat-panel text-center">
+							<div class="stat-row">
+								<div class="stat-cell bg-info padding-sm text-xs text-semibold">
+									<i class="fa fa-dashboard"></i>&nbsp;&nbsp;CORE_ENCODAGE
+								</div>
+							</div>
+							<div class="stat-row">
+								<div class="stat-cell bordered no-border-t no-padding-hr">
+									<?php if(get_process_admin('php index.php'))
+											{
+												echo '<p style="padding-top:21%;padding-bottom:21%;font-size:30px;text-transform: uppercase;font-weight: 300;"> EN LIGNE</p>';
+											}
+											else
+											{
+												echo '<p style="padding-top:21%;padding-bottom:21%;font-size:30px;text-transform: uppercase;font-weight: 300;"> HORS LIGNE</p>';
+											}
+											?>
+								</div>
+							</div>
+						</div> 
+						</div> 
+						<div class="col-xs-2">
+						<!-- Centered text -->
+						<div class="stat-panel text-center">
+							<div class="stat-row">
+								<div class="stat-cell bg-success padding-sm text-xs text-semibold">
+									<i class="fa fa-cloud-download"></i>&nbsp;&nbsp;Transmission
+								</div>
+							</div>
+							<div class="stat-row">
+								<div class="stat-cell bordered no-border-t no-padding-hr">
+									<?php if(get_process_admin('transmission-daemon'))
+											{
+												echo '<p style="padding-top:21%;padding-bottom:21%;font-size:30px;text-transform: uppercase;font-weight: 300;"> EN LIGNE</p>';
+											}
+											else
+											{
+												echo '<p style="padding-top:21%;padding-bottom:21%;font-size:30px;text-transform: uppercase;font-weight: 300;"> HORS LIGNE</p>';
+											}
+											?>
+								</div>
+							</div>
+						</div> 
+					</div>
+					</div>
+					</div>
+					</div>
+					</div>
+
+
+	<?php 
+}
+if($_GET['for'] == 'import_export')
+	{?>
+		<div class="panel">
+		<div class="panel-heading">
+			<span class="panel-title"><i class="fa fa-code-fork list-group-icon"></i> Import & Export</span>
+		</div>
+		<div class="panel-body">
+		<div class="alert alert-info" role="alert">En cours de développement </div>
+	<?php 
+}
+if($_GET['for'] == 'mail')
+	{
+		if(!empty($_POST['smtp']) AND !empty($_POST['port']) AND !empty($_POST['email']) AND !empty($_POST['password']))
+		{
+			$smtp = $_POST['smtp']; 
+			$port = $_POST['port']; 
+			$email = $_POST['email']; 
+			$password = $_POST['password']; 
+			$req = $bdd->exec("UPDATE config SET smtp_host='$smtp',smtp_port='$port',smtp_username='$email',smtp_password='$password' WHERE id_config=1");
+			// set de nouveau les droits. 
+			$right = get_data('config',"WHERE id_config=1");
+			$right = array_shift($right);
+			$moviedb_api = $right['moviedb_api'];
+			echo '<div class="alert alert-success" role="alert"><b>Parfait</b>, Modification effectuée.</div>';
+		}
+		if(!empty($_GET['test']))
+		{
+			$message = json_encode(array('email' => ''.$_SESSION['adresse_email'].'','password'=>''.$_SESSION['password_crypt'].''));
+			$subject ='Message de test ';
+			$req = $bdd->prepare("INSERT INTO `mail` 
+			(`to`, `subject`, `message`,`type`) 
+			VALUES
+			(:to,:subject,:message,:type)");
+			$type ='lost';
+			$req->bindParam(':to',$_SESSION['adresse_email']);
+			$req->bindParam(':subject',$subject);
+			$req->bindParam(':message', $message);
+			$req->bindParam(':type', $type);
+			$req->execute();
+			exec('php index.php mail');
+			echo '<div class="alert alert-success" role="alert"><b>Excelent ! </b> Messsage de test</div>';
+		}
+		?>
+		<div class="panel">
+		<div class="panel-heading">
+			<span class="panel-title"><i class="fa fa-envelope  list-group-icon"></i> Configuration Mail</span>
+		</div>
+		<div class="panel-body">
+<legend>Configuration</legend>
+	<form method="post" action="index.php?view=admin&for=mail">
+<div class="form-group">
+							<label  class="col-sm-2 control-label">SMTP</label>
+							<div class="col-sm-10"?>
+								<input type="text" class="form-control" name="smtp" id="smtp" value="<?php echo $right['smtp_host']; ?>" placeholder="Entrez votre serveur SMTP">
+							</div>
+						</div>
+						<div class="form-group">
+						<label  class="col-sm-2 control-label">Port</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="port" id="port" value="<?php echo $right['smtp_port']; ?>" placeholder="Entrez le numéro de port">
+							</div>
+						</div>
+							<div class="form-group">
+							<label  class="col-sm-2 control-label">Email</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="email" id="mail" value="<?php echo $right['smtp_username']; ?>" placeholder="Email de login">
+							</div>
+						</div>
+						<div class="form-group">
+							<label  class="col-sm-2 control-label">Mot de passe</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" name="password" id="inputPassword" value="<?php echo $right['smtp_password']; ?>" placeholder="Mot de passe ">
+							</div>
+						</div>
+						<div class="panel-footer text-right">
+						<a class="btn btn-warning" href="index.php?view=admin&for=mail&test=1">Tester</a>
+						<button type="submit" class="btn btn-primary">Sauvegarder</button></div>
+		</form>
+		<legend>Mail</legend>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Destinataire</th>
+			<th>Sujet</th>
+			<th>Message</th>
+			<th>Date</th>
+			<th>Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php 
+		$emails = get_data('mail',"ORDER BY date_send DESC");
+		if(empty($emails))
+		{
+			echo '<tr class="warning">
+			<td colspan="5"><center>La liste est vide </center></td></tr>';
+		}
+		foreach($emails as $email)
+		{
+			if($email['status'] == 'send')
+			{
+				$info = '<span class="label label-success">'.$email['status'].'</span>';
+			}
+			if($email['status'] == 'error')
+			{
+				$info = '<span class="label label-danger">'.$email['status'].'</span> '.$email['label_status'].'';
+			}
+
+		?>
+		<tr>
+			<td><?php echo $email['to']; ?></a></td>
+			<td><?php echo $email['subject']; ?></td>
+			<td><?php echo $email['message']; ?></td>
+			<td><?php echo $email['date_send']; ?></td>
+			<td><?php echo $info; ?></td>
+		</tr>
+		<?php 
+		}
+		?>
+		</tbody>
+</table>
+	<?php 
+}	
 if($_GET['for'] == 'config')
 	{
 		if(!empty($_POST['ffmpeg']))
@@ -57,7 +322,7 @@ if($_GET['for'] == 'config')
 			<span class="panel-title"><i class="fa fa-cogs list-group-icon"></i> Configuration TimeFlix</span>
 		</div>
 		<div class="panel-body">
-<div class="col-md-4">
+<div class="col-md-5">
 					<div class="panel-heading">
 						<span class="panel-title">Encodage</span>
 					</div>
@@ -88,7 +353,7 @@ if($_GET['for'] == 'config')
 							</div>
 						</div>
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-7">
 					<div class="panel-heading">
 						<span class="panel-title">Lien logiciel</span>
 					</div>
@@ -119,13 +384,13 @@ if($_GET['for'] == 'config')
 							</div>
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div style="display: block; clear: both;"></div>
+					<div class="col-md-5">
 					<div class="panel-heading">
 						<span class="panel-title">Sous-Titre "addic7ed"</span>
 					</div>
 					<div class="panel-body no-padding-hr">
-						<div class="alert alert-info" role="alert"><b>Pourquoi "addic7ed"</b>, Sous-titre de qualité et surtout sans décalage et de traduction version google traduction !</div>
-						<div class="form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
+						<div class="alert alert-warning" role="alert"><b>Attention</b>! Laissez nul si aucun compte.</div><div class="form-group no-margin-hr panel-padding-h no-padding-t no-border-t">
 							<div class="row">
 								<label class="col-sm-4 control-label">Username :</label>
 								<div class="col-sm-8">
@@ -149,10 +414,6 @@ if($_GET['for'] == 'config')
 						<button class="btn btn-primary">Sauvegarder</button>
 					</div>
 					</form>
-</div>
-
-		</div>
-				</div>
 	<?php 
 }
 if($_GET['for'] == 'logs')
@@ -185,8 +446,7 @@ if($_GET['for'] == 'logs')
 			echo $value.'<br>';
 		}
 		?></p>
-		</div>
-				</div>
+
 	<?php 
 }
 if($_GET['for'] == 'update')
@@ -239,62 +499,8 @@ echo $update;
 						</div>
 	<?php 
 }
-if($_GET['for'] == 'mail')
-	{?>
-		<div class="panel">
-		<div class="panel-heading">
-			<span class="panel-title"><i class="fa fa-envelope  list-group-icon"></i> Configuration Mail</span>
-		</div>
-		<div class="panel-body">
-<div class="form-group">
-							<label  class="col-sm-2 control-label">SMTP</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="smtp" id="smtp" placeholder="Entrez votre serveur SMTP">
-							</div>
-						</div>
-						<div class="form-group">
-						<label  class="col-sm-2 control-label">Port</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="port" id="port" placeholder="Entrez le numéro de port">
-							</div>
-						</div>
-							<div class="form-group">
-							<label  class="col-sm-2 control-label">Email</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="email" id="mail" placeholder="Email de login">
-							</div>
-						</div>
-						<div class="form-group">
-							<label  class="col-sm-2 control-label">Mot de passe</label>
-							<div class="col-sm-10">
-								<input type="password" class="form-control" id="inputPassword" placeholder="Mot de passe ">
-							</div>
-						</div>
-						<div class="panel-footer text-right">
-		<button type="submit" class="btn btn-primary">Sauvegarder & Tester</button>
-</div>
-	<?php 
-}
 	 if($_GET['for'] == 'stats')
 {
-	if(!empty($_POST['email']))
-	{
-		$req = $bdd->prepare("INSERT INTO `invitation` 
-		(`email`, `unique_id`, `users_id`) 
-		VALUES
-		(:email,:unique_id,:users_id)");
-		$uniqueid = uniqid();
-		$req->bindParam(':email',$_POST['email']);
-		$req->bindParam(':unique_id',$uniqueid);
-		$req->bindParam(':users_id', $_SESSION['id_users']);
-		$req->execute();
-		$link = 'http://beta.timeflix.net/index.php?view=invitation&unique_id='.$uniqueid;
-		$corps = '<h1>Invitation</h1>
-		<p>Jack vous fait parvenir une invitation pour tester la nouvelle version de TimeFlix !
-		<br> A très vite ! </p>';
-		$affiche="http://rails.blog.lemonde.fr/files/2011/04/3907950513_4ca17bcb38.1302524350.jpg";
-		echo push_email($_POST['email'],'TimeFlix - Beta ',$corps,$affiche,$link);
-	}
 	?>
 	<script>
 					init.push(function () {
@@ -371,13 +577,74 @@ if($_GET['for'] == 'mail')
 						<div class="graph-container">
 							<div id="requete-graph" class="graph"></div>
 						</div>
-					</div>
-				</div>
 
 <?php
 }
 if($_GET['for'] == 'users' OR empty($_GET['for']))
 {
+	if(!empty($_POST['email']))
+	{
+		$req = $bdd->prepare("INSERT INTO `invitation` 
+		(`email`, `unique_id`, `users_id`) 
+		VALUES
+		(:email,:unique_id,:users_id)");
+		$uniqueid = uniqid();
+		$req->bindParam(':email',$_POST['email']);
+		$req->bindParam(':unique_id',$uniqueid);
+		$req->bindParam(':users_id', $_SESSION['id_users']);
+		$req->execute();
+		$link = 'http://beta.timeflix.net/index.php?view=invitation&unique_id='.$uniqueid;
+		$corps = '<h1>Invitation</h1>
+		<p>L\administrateur vous fait parvenir une invitation pour tester TimeFlix !
+		<br> A très vite ! </p>';
+		$affiche="http://rails.blog.lemonde.fr/files/2011/04/3907950513_4ca17bcb38.1302524350.jpg";
+		echo push_email($_POST['email'],'TimeFlix - Inviation ',$corps,$affiche,$link);
+	}
+	if(!empty($_GET['id_users']) AND $_GET['action'] == 'valide')
+	{
+			$iduse = $_GET['id_users'];
+			$user = get_data('users',"WHERE id_users=$iduse");
+			if(!empty($user) AND $user[0]['status'] == 'attente')
+			{
+				$message = json_encode(array('email' => ''.$user[0]['adresse_email'].'','password'=>''.$user[0]['password_crypt'].''));
+				$subject ='[TimeFlix] - Validation inscription';
+				$req = $bdd->exec("UPDATE users SET status='actif' WHERE id_users=$iduse");
+				$req = $bdd->prepare("INSERT INTO `mail` 
+				(`to`, `subject`, `message`,`type`) 
+				VALUES
+				(:to,:subject,:message;type)");
+				$type ='new';
+				$req->bindParam(':to',$user[0]['adresse_email']);
+				$req->bindParam(':subject',$subject);
+				$req->bindParam(':message', $message);
+				$req->bindParam(':type', $type);
+				$req->execute();
+				exec('php index.php mail');
+				echo '<div class="alert alert-success" role="alert"><b>Excelent ! </b> Compte activé, un mail est envoyée. </div>';
+			}
+	}
+	if(!empty($_GET['id_users']) AND $_GET['action'] == 'lost')
+	{
+			$iduse = $_GET['id_users'];
+			$user = get_data('users',"WHERE id_users=$iduse");
+			if(!empty($user))
+			{
+				$message = json_encode(array('email' => ''.$user[0]['adresse_email'].'','password'=>''.$user[0]['password_crypt'].''));
+				$subject ='[TimeFlix] - Mot de passe oublié ? ';
+				$req = $bdd->prepare("INSERT INTO `mail` 
+				(`to`, `subject`, `message`,`type`) 
+				VALUES
+				(:to,:subject,:message,:type)");
+				$type ='lost';
+				$req->bindParam(':to',$user[0]['adresse_email']);
+				$req->bindParam(':subject',$subject);
+				$req->bindParam(':message', $message);
+				$req->bindParam(':type', $type);
+				$req->execute();
+				exec('php index.php mail');
+				echo '<div class="alert alert-success" role="alert"><b>Excelent ! </b> Renvoi identifiant effectuée</div>';
+			}
+	}
 	?>
 	<form method="post" action="index.php?view=admin&for=users">
 	<div class="panel">
@@ -386,7 +653,7 @@ if($_GET['for'] == 'users' OR empty($_GET['for']))
 					</div>
 					<div class="panel-body">
 <legend>Envoyer une invitation</legend>
-<div class="alert alert-warning" role="alert"><b>Attention !</b>  Cette fonctionnalité nécessite configuration mail.</div>
+<div class="alert alert-warning" role="alert"><b>Attention !</b>  Cette fonctionnalité nécessite la configuration mail.</div>
   <div class="form-group">
     <label for="exampleInputEmail1">Adresse email</label>
     <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Entrez un email valide">
@@ -413,15 +680,20 @@ if($_GET['for'] == 'users' OR empty($_GET['for']))
 		{
 			$log = get_data('logs',"WHERE id_users='".$user['id_users']."' ORDER BY date_add DESC LIMIT 1");
 			$record = geoip_record_by_addr($gi,$log[0]['adresse_ip']);
+			$connexion = 'Aucune données';
+			if(!empty($log[0]['date_add']))
+			{
+				$connexion = temps_ecoule($log[0]['date_add'],'date');
+			}
 		?>
 		<tr>
 			<td><?php echo $user['adresse_email']; ?></td>
-			<td><?php echo $user['password_crypt'];//core_encrypt_decrypt('decrypt',$user['password_crypt']); ?></td>
-			<td><?php echo temps_ecoule($log[0]['date_add'],'date'); ?></td>
+			<td><?php echo $user['password_crypt'];//core_encrypt_decrypt('decrypt',$user['password_crypt']); ?> <a href="index.php?view=admin&for=users&id_users=<?php echo $user['id_users']; ?>&action=lost">(Renvoyer)</a></td>
+			<td><?php echo $connexion; ?></td>
 			<td><?php echo $log[0]['useragent']; ?></td>
 			<td><?php echo $log[0]['adresse_ip']; ?> <span class="label label-info"><?php echo utf8_encode($record->city); ?></span></td>
 			<td><?php echo get_data_usage($user['id_users']); ?></td>
-			<td><?php echo $user['status']; ?></td>
+			<td><?php echo $user['status'];  if($user['status'] == 'attente') { echo ' <a href="index.php?view=admin&for=users&id_users='.$user['id_users'].'&action=valide">(Confirmer)</a>'; } ?></td>
 		</tr>
 		<?php
 	}
@@ -470,12 +742,12 @@ if($_GET['for'] == 'users' OR empty($_GET['for']))
 			$check='selected';
 		}
 ?>
-<legend><?php echo $film['title']; ?><a style="float:right" class="btn btn-danger btn-xs" href="index.php?view=admin&for=files&id_movies=2&action=delete&hash=<?php echo $film['hash']; ?>">Supprimer</a></legend>
+<legend><?php echo $film['title']; ?><a style="float:right" class="btn btn-danger btn-xs" href="index.php?view=admin&for=files&id_movies=<?php echo $id; ?>&action=delete&hash=<?php echo $film['hash']; ?>">Supprimer</a></legend>
 <div class="form-group">
 						<div class="form-group">
 							<label for="asdasdas" class="col-sm-2 control-label">Synopsis</label>
 							<div class="col-sm-10">
-								<textarea name="syno" class="form-control"><?php echo utf8_encode($film['synopsis']); ?></textarea>
+								<textarea name="syno" rows="5" class="form-control"><?php echo utf8_encode($film['synopsis']); ?></textarea>
 							</div>
 						</div>
 						<div class="form-group">
@@ -546,6 +818,11 @@ if($_GET['for'] == 'files' AND !isset($_GET['id_movies']))
 		$films = get_data('movies',"
 		INNER JOIN files_movies ON files_movies.id_movies = movies.id_movies
 		WHERE movies.status='1' ORDER BY files_movies.encoding_mp4 DESC");
+		if(empty($films))
+		{
+			echo '<tr class="warning">
+			<td colspan="4"><center>La liste est vide </center></td></tr>';
+		}
 		foreach($films as $film)
 		{
 			$p_movie = get_data_movie_bits($film['hash']);
@@ -586,6 +863,11 @@ if($_GET['for'] == 'files' AND !isset($_GET['id_movies']))
 	<tbody>
 		<?php 
 		$episodes = get_data('episode_serie',"ORDER BY date_add DESC");
+		if(empty($episodes))
+		{
+			echo '<tr class="warning">
+			<td colspan="5"><center>La liste est vide </center></td></tr>';
+		}
 		foreach($episodes as $episode)
 		{
 		?>

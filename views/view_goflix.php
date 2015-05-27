@@ -2,7 +2,7 @@
 <center><p style="font-size:60px;text-transform: uppercase;font-weight: 300;text-shadow: 0 2px 0 #000;color:white;margin-top:2%;"><i class="fa fa-download"></i> GoFlix !</p></center>
 <form class="ajax" id="goflix" method="get" class="search-form" style="box-shadow: 1px 1px 8px #000;">
 	<div class="input-group input-group-lg">
-		<span class="input-group-addon no-background"><span class="fa fa-search"></span></span>
+		<span class="input-group-addon no-background"><span class="fa fa-search" style="text-shadow: none;"></span></span>
 		<input class="form-control" type="text" name="q" id="q" style="border:1px solid #eee;" placeholder="Entre le nom d'un film ...">
 	</div> <!-- / .input-group -->
 		<div class="alert alert-success" role="alert" style="margin-top:1%;text-shadow: 0px 0px #000;">Astuce : Vous souhaitez filtrer votre bibliotèque ? Tapez @ suivis de votre mot clé ! </div>	

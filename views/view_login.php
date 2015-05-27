@@ -17,7 +17,7 @@
 
 </head>
 
-<body class="theme-frost page-signin-alt lazy" data-original="//pictures.timeflix.net/backgrounds<?php echo $img; ?>" style="background-attachment: fixed;background-size: cover;background-color: white;">
+<body class="theme-frost page-signin-alt lazy" data-original="data/backgrounds<?php echo $img; ?>" style="background-attachment: fixed;background-size: cover;background-color: white;">
 <div id="login">
 
 		<form action="" method="post" id="signin-form_new" class="panel" style="display:none;float:right;margin-right: 5%;box-shadow: 1px 1px 12px rgba(0,0,0,1);margin-top:16.5%;background:rgba(0,0,0,0.8);border:0;">
@@ -43,6 +43,24 @@
          	<p style="font-size:30px;text-transform: uppercase;font-weight: 300;color:white;text-shadow: 0 2px 0 #000;text-align: center;padding-bottom: 10px;">
 				Authentification 
 				<p> 
+			<?php 
+			if(isset($_GET['msg']) AND $_GET['msg'] == 'attente')
+			{
+				echo '<div class="alert alert-info" role="alert"><b>Information</b></br> Compte en attente de validation !</div>'; 
+			}
+			?>
+			<?php 
+			if(isset($_GET['msg']) AND $_GET['msg'] == 'erreur')
+			{
+				echo '<div class="alert alert-danger" role="alert"><b>Oups</b></br> Une erreur est survenue !</div>'; 
+			}
+			?>
+			<?php 
+			if(isset($_GET['msg']) AND $_GET['msg'] == 'auth_fail')
+			{
+				echo '<div class="alert alert-danger" role="alert"><b>Oups</b></br> Vos informations de connexion sont incorrect !</div>'; 
+			}
+			?>
 		<div class="form-group">
 			<input type="text" name="username" id="username" class="form-control input-lg" placeholder="Email">
 		</div> <!-- / Username -->

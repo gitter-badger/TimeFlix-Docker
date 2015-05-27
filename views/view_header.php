@@ -46,7 +46,7 @@
 					<a href="#" class="list-group-item"><i class="profile-list-icon fa fa-envelope"></i> Email : <p style="float:right"><?php echo $_SESSION['adresse_email']; ?></p></a>
 					<a href="#" class="list-group-item"><i class="profile-list-icon fa fa-laptop"></i> Inscrit depuis  : <p style="float:right"><?php echo temps_ecoule($_SESSION['registered'],'date'); ?></p></a>
                     <!--  <a href="#" class="list-group-item"><i class="profile-list-icon fa fa-password"></i> Mot de passe [] : <p style="float:right"><?php echo $_SESSION['password_crypt']; ?></p></a> -->
-                    <a href="#" class="list-group-item"><i class="profile-list-icon fa fa-bell"></i> Notification Email (Not working!): <p style="float:right">			<input type="checkbox" id="switcher-disabled-square" checked="checked"></p></a>
+                    <a href="#" class="list-group-item"><i class="profile-list-icon fa fa-bell"></i> Notification Email <p style="float:right">			<input type="checkbox" id="notif_email" <?php if($_SESSION['notif_email'] =='activer') { echo 'checked="checked"'; }?>></p></a>
 					<a href="#" class="list-group-item"><i class="profile-list-icon fa fa-signal"></i> Data consommée : <p style="float:right">			<?php echo get_data_usage($_SESSION['id_users']); ?></p></a>
 
 					</div>
@@ -93,7 +93,6 @@
 	<a href="#" class="list-group-item"><i class="profile-list-icon fa fa-file-text-o"></i> CORE_LOG_NGINX<p style="float:right"><?php echo get_process('php apache.php'); ?> </p></a>
 	<a href="#" class="list-group-item"><i class="profile-list-icon fa fa-download"></i> CORE_TORRENT<p style="float:right"><?php echo get_process('transmission-daemon'); ?> </p></a>
 	<a href="#" class="list-group-item"><i class="profile-list-icon fa fa-cloud"></i> Stockage disponible<p style="float:right"><?php echo format_bytes(disk_free_space('/')); ?></p></a>
-	<a href="#" class="list-group-item"><i class="profile-list-icon fa fa-cloud"></i> Taille BDD <p style="float:right"><?php echo $_SESSION['bdd']; ?></p></a>
 	</div>
 	</div>
 

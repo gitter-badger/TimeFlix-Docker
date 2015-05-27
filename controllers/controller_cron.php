@@ -1,7 +1,123 @@
 <?php
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-echo 'Starting Timeflix daemon'.PHP_EOL;
-echo 'Waiting task'.PHP_EOL;
+array_shift($argv); // remove first argument
+$choice = array_shift($argv);
+$choice = strtolower(trim($choice));
+
+switch ($choice)
+{
+	case 'encodage':
+		echo 'Starting Timeflix encodage'.PHP_EOL;
+		encodage();
+		break;
+	
+	case 'log':
+		echo 'Starting Timeflix log'.PHP_EOL;
+		log_nginx();
+		break;
+
+	case 'mail':
+		echo 'Starting Timeflix mail'.PHP_EOL;
+		send_email();
+		break;
+	
+	default:
+		echo 'Cette action n\'est pas reconnue'.PHP_EOL;
+		exit;
+		break;
+}
+exit(0);
+function send_email()
+{
+	global $right;
+	global $bdd;
+	$mail             = new PHPMailer();
+	$mail->CharSet 	  = "UTF-8";
+	$mail->IsSMTP();
+	$mail->Host       = $right['smtp_host']; 
+	$mail->SMTPAuth   = true;                  
+	$mail->Host       = $right['smtp_host']; 
+	$mail->Port       = $right['smtp_port'];            
+	$mail->Username   = $right['smtp_username']; 
+	$mail->Password   = $right['smtp_password'];
+
+	$mail_attente = get_data('mail',"WHERE status ='wait'");
+	foreach ($mail_attente as $key => $mail_traitement)
+	{
+		$id = $mail_traitement['id_mail'];
+		$mail->Subject = $mail_traitement['subject'];
+		if($mail_traitement['type'] == 'new')
+		{
+			 $info = json_decode($mail_traitement['message']);
+ 			 $message = file_get_contents('library/phpmailer/news.html');
+ 			 $message = str_replace('%username%', $info->email, $message); 
+			 $message = str_replace('%password%', core_encrypt_decrypt('decrypt',$info->password), $message);   
+		}
+		if($mail_traitement['type'] == 'lost')
+		{
+			 $info = json_decode($mail_traitement['message']);
+ 			 $message = file_get_contents('library/phpmailer/lost.html');
+ 			 $message = str_replace('%username%', $info->email, $message); 
+			 $message = str_replace('%password%', core_encrypt_decrypt('decrypt',$info->password), $message);  
+		}
+		$mail->SetFrom('noreply@timeflix.net', 'noreply');
+		$mail->MsgHTML($message);
+		$mail->AddAddress($mail_traitement['to'], $mail_traitement['to']);
+		if(!$mail->Send()) {
+		  $error = $mail->ErrorInfo;
+		  $bdd->exec("UPDATE mail SET status='error',label_status='$error',date_send=NOW() WHERE id_mail='$id'");
+		} else {
+		  $error = 'Message send !';
+		  $bdd->exec("UPDATE mail SET status='send',label_status='$error',date_send=NOW() WHERE id_mail='$id'");
+		}
+	}
+
+}
+function log_nginx()
+{
+	$fichier_log = '/var/log/video.nginx.access.log';
+	while(1)
+	{
+		$handle = fopen($fichier_log, 'r');
+		$i=0;
+		if ($handle)
+		{
+			echo 'Working apache_log - '.date("H:i").PHP_EOL;
+			while (!feof($handle))
+			{
+				$buffer = fgets($handle);
+				$data = explode(':', $buffer);
+				if(!empty($data['0']) AND !empty($data['1']) AND !empty($data['2']))
+				{
+					$req = $bdd->prepare("INSERT INTO `apache_log` 
+						(`adresse_ip`, `bits`, `file`) 
+						VALUES
+						(:adresse_ip,:bits,:file)");
+					$req->bindParam(':adresse_ip', $data['0']);
+					$req->bindParam(':bits', $data['1']);
+					$req->bindParam(':file', $data['2']);
+					$req->execute() or die(print_r($req->errorInfo(), true));
+					$i++;
+				}
+			}
+			echo 'End apache_log ('.$i.')'.PHP_EOL;
+			fclose($handle);
+			echo 'Working users/data'.PHP_EOL;
+			file_put_contents($fichier_log, '');
+			$association = get_data('apache_log',"WHERE id_users IS NULL");
+			foreach($association as $assoc)
+			{
+				$ip = $assoc['adresse_ip'];
+				$id = $assoc['id_apache_log'];
+				$id_users = get_data('logs',"WHERE adresse_ip='$ip' ORDER BY date_add DESC LIMIT 0,1");
+				$id_user = $id_users['0']['id_users'];
+				$bdd->exec("UPDATE apache_log SET id_users='$id_user' WHERE id_apache_log='$id'");
+			}
+			echo 'End users/data'.PHP_EOL;
+		}
+	sleep(120);
+	}
+}
 function check()
 {
 	global $bdd;	
@@ -127,70 +243,72 @@ function check()
 		}
 	}
 }
-while(1)
+function encodage()
 {
-	check();
-	if($right['encodage_mp4'] != 'on')
-	{	
-		sleep(60);
-		continue;
-	}
-	$list_encoding = get_data('files_movies','WHERE status="1" AND encoding_mp4="0"');
-	$list_encoding_serie = get_data('episode_serie','WHERE status="1" AND encoding_mp4="0"');
-	foreach ($list_encoding as $key => $encoding)
+	global $right;
+	global $bdd;
+	while(1)
 	{
-		$id = $encoding['id_file_movies'];
-		$file=str_replace("\\", "/",$encoding['name']);
-		$file=str_replace(" ", "\\ ",$file);
-		$file=str_replace(")", "\)",$file);
-		$file=str_replace("(", "\(",$file);
-		$req = $bdd->exec("UPDATE files_movies SET encoding_mp4='1' WHERE id_file_movies=$id");
-		$args = '-vcodec copy';
-		if(!empty($encoding['h264_args']))
-		{
-			$args = $encoding['h264_args'];
+		check();
+		if($right['encodage_mp4'] != 'on')
+		{	
+			sleep(60);
+			continue;
 		}
-		echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;
-		echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
-		$req = $bdd->exec("UPDATE files_movies SET encoding_mp4='2' WHERE id_file_movies=$id");
-		$shot = array('10','15','20','30','40','50','55','60','70','80','90','100');
-		foreach ($shot as $value)
+		$list_encoding = get_data('files_movies','WHERE status="1" AND encoding_mp4="0"');
+		$list_encoding_serie = get_data('episode_serie','WHERE status="1" AND encoding_mp4="0"');
+		foreach ($list_encoding as $key => $encoding)
 		{
-			$file = ''.$encoding['id_movies'].'_'.$value.'.jpg';
-			exec('ffmpegthumbnailer -i data/public/'.$encoding['hash'].'.mp4 -o data/thumbnail/'.$file.' -s 320 -q 10 -t '.$value.'');
-			$req = $bdd->prepare("INSERT INTO `thumbnail` 
-			(`id_movies`, `file`) 
-				VALUES
-				(:id_movies,:file)");
-				$req->bindParam(':id_movies',$encoding['id_movies']);
-				$req->bindParam(':file',$file);
-				$req->execute() or die(print_r($req->errorInfo(), true));
-		}
-		echo 'End encoging : '.$file.PHP_EOL;
-		echo 'Waiting task'.PHP_EOL;
-	}
-	foreach ($list_encoding_serie as $key => $encoding)
-	{
-		print_r($encoding);
-		$id = $encoding['id_episode'];
-		$file=str_replace("\\", "/",$encoding['file']);
-		$file=str_replace(" ", "\\ ",$file);
-		$file=str_replace(")", "\)",$file);
-		$file=str_replace("(", "\(",$file);
-		$req = $bdd->exec("UPDATE episode_serie SET encoding_mp4='1' WHERE id_episode=$id");
-		$args = '-c:v libx264';
-		if (strpos($file,'VOSTFR') !== false)
-		{
+			$id = $encoding['id_file_movies'];
+			$file=str_replace("\\", "/",$encoding['name']);
+			$file=str_replace(" ", "\\ ",$file);
+			$file=str_replace(")", "\)",$file);
+			$file=str_replace("(", "\(",$file);
+			$req = $bdd->exec("UPDATE files_movies SET encoding_mp4='1' WHERE id_file_movies=$id");
+			$args = '-vcodec copy';
+			if(!empty($encoding['h264_args']))
+			{
+				$args = $encoding['h264_args'];
+			}
 			echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;
-			echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -vf subtitles='.$sub.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
-			$req = $bdd->exec("UPDATE episode_serie SET encoding_mp4='2' WHERE id_episode=$id");
+			echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
+			$req = $bdd->exec("UPDATE files_movies SET encoding_mp4='2' WHERE id_file_movies=$id");
+			$shot = array('10','15','20','30','40','50','55','60','70','80','90','100');
+			foreach ($shot as $value)
+			{
+				$file = ''.$encoding['id_movies'].'_'.$value.'.jpg';
+				exec('ffmpegthumbnailer -i data/public/'.$encoding['hash'].'.mp4 -o data/thumbnail/'.$file.' -s 320 -q 10 -t '.$value.'');
+				$req = $bdd->prepare("INSERT INTO `thumbnail` 
+				(`id_movies`, `file`) 
+					VALUES
+					(:id_movies,:file)");
+					$req->bindParam(':id_movies',$encoding['id_movies']);
+					$req->bindParam(':file',$file);
+					$req->execute() or die(print_r($req->errorInfo(), true));
+			}
+			echo 'End encoging : '.$file.PHP_EOL;
+			echo 'Waiting task'.PHP_EOL;
 		}
-		else
+		foreach ($list_encoding_serie as $key => $encoding)
 		{
-			if($right['encodage_sub'] == 'on')
-			{	
-				echo 'Check soustitre'.$file.PHP_EOL;
-				echo exec(''.$right['subliminal'].' '.$serie.''.$lien.'/'.$file.' -l fr -p addic7ed --addic7ed-username '.$right['addic7ed-username'].' --addic7ed-password '.$right['addic7ed-password'].'');
+			print_r($encoding);
+			$id = $encoding['id_episode'];
+			$file=str_replace("\\", "/",$encoding['file']);
+			$file=str_replace(" ", "\\ ",$file);
+			$file=str_replace(")", "\)",$file);
+			$file=str_replace("(", "\(",$file);
+			$bdd->exec("UPDATE episode_serie SET encoding_mp4='1' WHERE id_episode=$id");
+			$args = '-c:v copy';
+			if (strpos($file,'VOSTFR') !== false)
+			{
+				echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;
+				echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
+				$req = $bdd->exec("UPDATE episode_serie SET encoding_mp4='2' WHERE id_episode=$id");
+			}
+			else
+			{
+				echo 'Check soustitre '.$file.PHP_EOL;
+				echo exec(''.$right['subliminal'].' '.$file.' -l fr -p addic7ed --addic7ed-username '.$right['addic7ed-username'].' --addic7ed-password '.$right['addic7ed-password'].'');
 				$dir = explode('/',$file);
 				$filesub = $file;
 				if(count($dir) == 2)
@@ -209,39 +327,45 @@ while(1)
 				{
 				    $sub=str_replace(".avi", ".fr.srt",$filesub);
 				}
-				echo 'UTF8 converting task'.PHP_EOL;
-			}
-			//file_put_contents($sub, utf8_encode(file_get_contents($sub)));
-			echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;
+				if (file_exists($sub)) {
+				    echo "Le fichier $filename existe.";
+				} else {
+				   echo exec(''.$right['subliminal'].' '.$file.' -l fr');
+				}
+				require('library/srtparser/srtFile.php');
 
-			if($right['encodage_sub'] == 'on')
-			{	
-				echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -vf subtitles='.$sub.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');
+				try{
+				  $srt = new \SrtParser\srtFile(''.$sub.'');
+				  $srt->setWebVTT(true);
+				  $srt->build(true);
+				  $srt->save('data/subtiles/'.$encoding['hash'].'.vtt', true);
+				}
+				catch(Exeption $e){
+				  echo "Error: ".$e->getMessage()."\n";
+				}
+				echo PHP_EOL.'starting encoging ['.$args.']: '.$file.PHP_EOL;
+				echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');	
+				$req = $bdd->exec("UPDATE episode_serie SET encoding_mp4='2' WHERE id_episode=$id");
 				exec('rm '.$sub.'');
 			}
-			else
-			{
-				echo exec(''.$right['ffmpeg'].' -y -i  data/downloads/'.$file.' '.$args.' -codec:a libvorbis -b:a 320k -c:a libfdk_aac data/public/'.$encoding['hash'].'.mp4 2> data/log/'.$encoding['hash'].'.log');	
-			}
-			$req = $bdd->exec("UPDATE episode_serie SET encoding_mp4='2' WHERE id_episode=$id");
+			// $shot = array('10','15','20','30','40','50','55','60','70','80','90','100');
+			// foreach ($shot as $value)
+			// {
+			// 	$file = ''.$encoding['id_movies'].'_'.$value.'.jpg';
+			// 	exec('ffmpegthumbnailer -i data/public/'.$encoding['hash'].'.mp4 -o data/thumbnail/'.$file.' -s 320 -q 10 -t '.$value.'');
+			// 	$req = $bdd->prepare("INSERT INTO `thumbnail` 
+			// 	(`id_movies`, `file`) 
+			// 		VALUES
+			// 		(:id_movies,:file)");
+			// 		$req->bindParam(':id_movies',$encoding['id_movies']);
+			// 		$req->bindParam(':file',$file);
+			// 		$req->execute() or die(print_r($req->errorInfo(), true));
+			// }
+			remove_transmission($encoding['hash']);
+			echo 'End encoging : '.$file.PHP_EOL;
+			echo 'Waiting task'.PHP_EOL;
 		}
-		// $shot = array('10','15','20','30','40','50','55','60','70','80','90','100');
-		// foreach ($shot as $value)
-		// {
-		// 	$file = ''.$encoding['id_movies'].'_'.$value.'.jpg';
-		// 	exec('ffmpegthumbnailer -i data/public/'.$encoding['hash'].'.mp4 -o data/thumbnail/'.$file.' -s 320 -q 10 -t '.$value.'');
-		// 	$req = $bdd->prepare("INSERT INTO `thumbnail` 
-		// 	(`id_movies`, `file`) 
-		// 		VALUES
-		// 		(:id_movies,:file)");
-		// 		$req->bindParam(':id_movies',$encoding['id_movies']);
-		// 		$req->bindParam(':file',$file);
-		// 		$req->execute() or die(print_r($req->errorInfo(), true));
-		// }
-		remove_transmission($encoding['hash']);
-		echo 'End encoging : '.$file.PHP_EOL;
-		echo 'Waiting task'.PHP_EOL;
+		sleep(10);
 	}
-	sleep(10);
 }
 ?>
