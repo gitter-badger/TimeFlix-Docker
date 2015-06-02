@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="theme/player/plyr.css">
+<div class="player">
+    <video poster="https://cdn.selz.com/plyr/1.0/poster.jpg" controls crossorigin>
+        <!-- Video files -->
+        <source src="https://cdn.selz.com/plyr/1.0/movie.mp4" type="video/mp4">
+        <source src="https://cdn.selz.com/plyr/1.0/movie.webm" type="video/webm">
+
+        <!-- Text track file -->
+    </video>
+</div>
+<script src="theme/player/plyr.js"></script>
+<script>
+        (function(d, u){
+            var a = new XMLHttpRequest(),
+                b = d.body;
+
+            // Check for CORS support
+            // If you're loading from same domain, you can remove the if statement
+            if("withCredentials" in a) {
+                a.open("GET", u, true);
+                a.send();
+                a.onload = function(){
+                    var c = d.createElement("div");
+                    c.style.display="none";
+                    c.innerHTML = a.responseText;
+                    b.insertBefore(c, b.childNodes[0]);
+                }
+            }
+        })(document, "https://cdn.plyr.io/1.1.10/sprite.svg");
+plyr.setup();</script>
