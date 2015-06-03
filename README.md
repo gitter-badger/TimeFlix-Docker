@@ -15,7 +15,14 @@ Pass : timeflix
 
 Change your root login ! 
 
-Run encodage service manuely
+1. Update TimeFlix
+
+```sh
+cd /var/www/time/
+git pull
+```
+
+2. Run encodage service manuely
 
 ```sh
 nohup php index.php encodage > logs/system.log &
