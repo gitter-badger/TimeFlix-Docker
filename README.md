@@ -26,7 +26,7 @@ cd /var/www/time/
 git pull 
 ```
 
-Run encodage service manuely
+Run encodage service manually
 
 ```sh
 nohup php index.php encodage > logs/system.log &
