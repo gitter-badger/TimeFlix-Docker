@@ -148,14 +148,6 @@ if(!empty($_GET['id_movie']) AND !empty($_GET['hash']))
 		//header('Location: index.php'); 
     	$corps = '<h1>'.$data->title.'</h1>
     	'.$data->overview.'';
-      	//echo push_email('jack.gianesini@gmail.com','Nouveau film ['.$data->title.']',$corps,'https://image.tmdb.org/t/p/w396'.$data->poster_path.'','beta.timeflix.net');
 	} 
-	else
-	{
-		$json_string = json_encode($torrent, JSON_PRETTY_PRINT);
-	  	 $corps = '<h1>Ajout impossible ! </h1>
-    	<p>'.utf8_decode($data->overview).'</p>';
-      	push_email('jack.gianesini@gmail.com','[DEBUG]['.$data->title.']',$corps,'https://image.tmdb.org/t/p/w396'.$data->poster_path.'','https://json-indent.appspot.com/indent?url=https://getstrike.net/api/v2/torrents/info/?hashes='.$hash.'');
-	}  
 	include_once('views/view_add_movie.php');
 }
