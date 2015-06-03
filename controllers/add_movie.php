@@ -21,7 +21,7 @@ if (isset($_FILES["torrent"]))
 		"rb") or die(" File check error");
 	$filesTorrentSize = filesize($_FILES["torrent"]["tmp_name"]);
 	$alltorrent = fread($filesTorrent, $filesTorrentSize);
-	checktorrent($alltorrent);
+	//checktorrent($alltorrent);
 	$_GET['hash'] = core_encrypt_decrypt('encrypt',strtoupper(calchash($alltorrent)));
 	$name = parcourirtorrent($filesTorrentSize,$alltorrent);
 	foreach (parcourirtorrent($filesTorrentSize,$alltorrent) as $key => $value) 
