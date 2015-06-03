@@ -70,7 +70,7 @@ function send_email()
 			 $message = str_replace('%synopsis%', $info->syno, $message);
 			 $message = str_replace('%title%', $info->title, $message);
 		}
-		$mail->SetFrom('noreply@timeflix.net', 'noreply');
+		$mail->SetFrom('noreply@yourdomain.net', 'Système TimeFlix');
 		$mail->MsgHTML($message);
 		$mail->AddAddress($mail_traitement['to'], $mail_traitement['to']);
 		if(!$mail->Send()) {
