@@ -137,6 +137,7 @@ function check()
 		$status = get_transmission($file['hash']);
 		if($status['percent'] == 100)
 		{
+			exec('chmod -R 777 data/');
 			$hash = $file['hash'];
 			$id_moviedb = $file['id_moviedb'];
 			$id = $file['id_file_movies'];
