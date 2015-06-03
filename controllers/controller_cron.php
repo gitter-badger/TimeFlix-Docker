@@ -388,6 +388,7 @@ function encodage()
 						$req->bindParam(':message', $message);
 						$req->bindParam(':type', $type);
 						$req->execute();
+						exec('php index.php mail');
 				}
 			}
 			remove_transmission($encoding['hash']);
