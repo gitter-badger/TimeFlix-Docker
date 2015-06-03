@@ -8,6 +8,10 @@
 ```
 Not compatible for arm version ! 
 
+### Required
+- Linux x64 
+- ApiKey "https://www.themoviedb.org/"
+
 ### Login
 
 User : root / 
@@ -27,6 +31,7 @@ Run encodage service manuely
 ```sh
 nohup php index.php encodage > logs/system.log &
 ```
+
 ### Go 
 
 http://yourip:8000 and configure your administrator login.
