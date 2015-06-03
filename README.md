@@ -18,7 +18,8 @@ Change your root login !
 Update TimeFlix
 
 ```sh
-nohup php index.php encodage > logs/system.log &
+cd /var/www/time/
+git pull 
 ```
 
 Run encodage service manuely
@@ -28,6 +29,4 @@ nohup php index.php encodage > logs/system.log &
 ```
 ### Go 
 
-WebInteface -> http://0.0.0.0:8000 and configure your administrator login. 
-
-
+WebInteface -> http://0.0.0.0:8000 and configure your administrator login.
