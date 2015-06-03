@@ -31,4 +31,7 @@ nohup php index.php encodage > logs/system.log &
 
 WebInteface -> http://0.0.0.0:8000 and configure your administrator login.
 
-![](/http://62.210.136.116/1.jpg)
+![2](https://cloud.githubusercontent.com/assets/533219/7962001/392e1a8c-0a0b-11e5-84ff-702be0e1702b.png)
+
+
+
