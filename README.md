@@ -10,7 +10,7 @@ Not compatible for arm version !
 
 ### Required
 - Linux x64 
-- ApiKey "https://www.themoviedb.org/"
+- APIKey "https://www.themoviedb.org/"
 
 ### Login
 
