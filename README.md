@@ -31,4 +31,4 @@ nohup php index.php encodage > logs/system.log &
 
 WebInteface -> http://0.0.0.0:8000 and configure your administrator login.
 
-![]({{site.baseurl}}/http://62.210.136.116/1.jpg)
+![](/http://62.210.136.116/1.jpg)
