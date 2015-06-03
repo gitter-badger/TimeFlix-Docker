@@ -445,17 +445,9 @@ if(isset($_GET['for']) AND $_GET['for'] == 'update')
 			} ?></div>
 			<?php
 		}
-$xml=simplexml_load_file("http://gitlab.timeflix.net/root/timeflixdocker/commits/master.atom?private_token=iNJngj5ZNRs98CzqtxKd") or die("Error: Cannot create object");
-$retour = array();
-exec('git rev-parse HEAD',$retour);
-$head = $retour['0'];
-$depo = substr($xml->entry->id,-40);
-$update = '<div class="alert alert-warning" role="alert"><b>Attention</b> Votre version n\'est pas à jour ! <a href="index.php?view=admin&for=update&action=pull" class="btn btn-xs btn-warning" style="float:right;">
+$xml=simplexml_load_file("https://github.com/Peanuts.atom") or die("Error: Cannot create object");
+$update = '<div class="alert alert-warning" role="alert"><b>Attention</b>, Cliquez sur mise à jour si vous avez effectuée aucun modification sur le code. <a href="index.php?view=admin&for=update&action=pull" class="btn btn-xs btn-warning" style="float:right;">
 Mettre à jour</a></div>';
-if($head == $depo)
-{
-	$update = '<div class="alert alert-success" role="alert"><b>Excelent ! </b> Votre version est à jour ! </div>';
-}
 echo $update;
 ?>
 <div class="panel widget-messages-alt">

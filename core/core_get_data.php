@@ -109,7 +109,7 @@ function get_system()
 function get_transmission($hash)
 {
     $client = new Client();
-    $client->authenticate('admin', 'jackjack');
+    $client->authenticate('admin', 'timeflix');
     $transmission = new Transmission();
     $transmission->setClient($client);
     $torrent = $transmission->get($hash);
@@ -128,7 +128,7 @@ function get_transmission_serie($id_episode)
     if(count($result) == 1)
     {
       $client = new Client();
-      $client->authenticate('admin', 'jackjack');
+      $client->authenticate('admin', 'timeflix');
       $transmission = new Transmission();
       $transmission->setClient($client);
       $torrent = $transmission->get($result['0']['hash']);
@@ -153,7 +153,7 @@ function get_search($search)
 function stop_transmission($hash)
 {
     $client = new Client();
-    $client->authenticate('admin', 'jackjack');
+    $client->authenticate('admin', 'timeflix');
     $transmission = new Transmission();
     $transmission->setClient($client);
     $torrent = $transmission->get($hash);
@@ -163,7 +163,7 @@ function stop_transmission($hash)
 function remove_transmission($hash)
 {
     $client = new Client();
-    $client->authenticate('admin', 'jackjack');
+    $client->authenticate('admin', 'timeflix');
     $transmission = new Transmission();
     $transmission->setClient($client);
     $torrent = $transmission->get($hash);
@@ -196,6 +196,14 @@ function get_requete($value)
 {
   global $bdd;
   $req = $bdd->prepare('SELECT COUNT(*) AS requete,DATE(date_add) AS date FROM apache_log GROUP BY DATE(date_add)');
+  $req->execute();
+  $value = $req->fetchAll();  
+  return $value;
+}
+function get_admin()
+{
+  global $bdd;
+  $req = $bdd->prepare('SELECT COUNT(*) AS adresse_email FROM users WHERE is_admin=1');
   $req->execute();
   $value = $req->fetchAll();  
   return $value;

@@ -8,7 +8,7 @@ use Transmission\Transmission;
 
 
 $client = new Client();
-$client->authenticate('admin', 'jackjack');
+$client->authenticate('admin', 'timeflix');
 $transmission = new Transmission();
 $transmission->setClient($client);
 $queue = $transmission->all();

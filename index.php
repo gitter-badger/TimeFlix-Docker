@@ -37,16 +37,16 @@ $moviedb_api = $right['moviedb_api'];
 
 $gi = geoip_open(realpath("library/geoip/GeoLiteCity.dat"),GEOIP_STANDARD);
 
-
+$admi_count = get_admin();
+if($admi_count[0][0] == 0)
+{
+  include_once('controllers/controller_install.php');
+  exit;
+}
 if (php_sapi_name() == 'cli')
 {	
     include_once('controllers/controller_cron.php');
     exit;
-}
-if (isset($_GET['view']) AND $_GET['view'] == 'install')
-{
-  include_once('controllers/controller_install.php');
-  exit;
 }
 if (isset($_GET['view']) AND $_GET['view'] == 'invitation')
 {
