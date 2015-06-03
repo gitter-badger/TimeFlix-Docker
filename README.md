@@ -18,8 +18,7 @@ Change your root login !
 1. Update TimeFlix
 
 ```sh
-cd /var/www/time/
-git pull
+nohup php index.php encodage > logs/system.log &
 ```
 
 2. Run encodage service manuely
