@@ -10,10 +10,13 @@ Not compatible for arm version !
 
 ### Login
 
-8000 -> HTTP 
-2200 -> SSH 
+8000 -> HTTP
+
+2200 -> SSH
+
 
 User : root 
+
 Pass : timeflix 
 
 Change your root login ! 
