@@ -34,7 +34,8 @@
 
 	   ?>
 -->
-		<div class="alert alert-info" role="alert"><center><b> Version DOCKER </b></center></br> Aucun réglages supplémentaire est nécessaire, tous est déjà installés & configurés !  </div>
+		<div class="alert alert-info" role="alert"><center><b> Version DOCKER </b></center></br> Aucun réglages supplémentaire est nécessaire, il faudra juste pense à configurer votre cle api <b><a href="https://www.themoviedb.org/documentation/api">MovieDB</a></b></div>
+	   <form action="" method="post" id="signin-form_new">
 	   <div class="form-group">
 			<input type="text" name="inc_username" id="inc_username" class="form-control input-lg" placeholder="Votre adresse mail">
 		</div> <!-- / Username -->
@@ -49,6 +50,7 @@
 			<input type="submit" value="Valider" class="btn btn-success btn-lg">
 			</div>
 		</div>
+		</form>
     </div>
         </div>
 </body>

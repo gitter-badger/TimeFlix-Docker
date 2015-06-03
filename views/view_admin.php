@@ -16,13 +16,24 @@
 if(isset($_GET['for']) AND $_GET['for'] == 'dashboard')
 	{
 		$stock = disk_free_space('/') / disk_total_space('/') * 100;
-
+		if($_GET['service'] == 'encodage')
+		{
+			if(get_process_admin('php index.php'))
+					{
+						exec('echo Script encodage stop by admin > logs/system.log');
+						exec('killall php');
+					}
+					else
+					{
+						exec('php index.php encodage > logs/system.log &');
+					}
+		}
 		?>
 		<div class="panel">
 		<div class="panel-heading">
 			<span class="panel-title"><i class="fa fa-dashboard  list-group-icon"></i> Dashboard</span>
 		</div>
-		<div class="panel-body" style="padding-left:15%;">
+		<div class="panel-body" style="">
 		<script>
 					init.push(function () {
 						// Easy Pie Charts
@@ -105,45 +116,23 @@ if(isset($_GET['for']) AND $_GET['for'] == 'dashboard')
 						<div class="stat-panel text-center">
 							<div class="stat-row">
 								<div class="stat-cell bg-info padding-sm text-xs text-semibold">
-									<i class="fa fa-dashboard"></i>&nbsp;&nbsp;CORE_ENCODAGE
+									<i class="fa fa-dashboard"></i>&nbsp;&nbsp;ENCODAGE
 								</div>
 							</div>
 							<div class="stat-row">
 								<div class="stat-cell bordered no-border-t no-padding-hr">
 									<?php if(get_process_admin('php index.php'))
 											{
-												echo '<p style="padding-top:21%;padding-bottom:21%;font-size:30px;text-transform: uppercase;font-weight: 300;"> EN LIGNE</p>';
+												echo 'Le service est démmarer </br></br><a class="btn btn-danger" href="index.php?view=admin&for=dashboard&service=encodage">Arreter</a>';
 											}
 											else
 											{
-												echo '<p style="padding-top:21%;padding-bottom:21%;font-size:30px;text-transform: uppercase;font-weight: 300;"> HORS LIGNE</p>';
+												echo 'Le service est arrêter </br></br><a class="btn btn-success" href="index.php?view=admin&for=dashboard&service=encodage">Démarrer</a>';
 											}
 											?>
 								</div>
 							</div>
 						</div> 
-						</div> 
-						<div class="col-xs-2">
-						<!-- Centered text -->
-						<div class="stat-panel text-center">
-							<div class="stat-row">
-								<div class="stat-cell bg-success padding-sm text-xs text-semibold">
-									<i class="fa fa-cloud-download"></i>&nbsp;&nbsp;Transmission
-								</div>
-							</div>
-							<div class="stat-row">
-								<div class="stat-cell bordered no-border-t no-padding-hr">
-									<?php if(get_process_admin('transmission-daemon'))
-											{
-												echo '<p style="padding-top:21%;padding-bottom:21%;font-size:30px;text-transform: uppercase;font-weight: 300;"> EN LIGNE</p>';
-											}
-											else
-											{
-												echo '<p style="padding-top:21%;padding-bottom:21%;font-size:30px;text-transform: uppercase;font-weight: 300;"> HORS LIGNE</p>';
-											}
-											?>
-								</div>
-							</div>
 						</div> 
 					</div>
 					</div>
@@ -456,17 +445,9 @@ if(isset($_GET['for']) AND $_GET['for'] == 'update')
 			} ?></div>
 			<?php
 		}
-$xml=simplexml_load_file("http://gitlab.timeflix.net/root/timeflixdocker/commits/master.atom?private_token=iNJngj5ZNRs98CzqtxKd") or die("Error: Cannot create object");
-$retour = array();
-exec('git rev-parse HEAD',$retour);
-$head = $retour['0'];
-$depo = substr($xml->entry->id,-40);
-$update = '<div class="alert alert-warning" role="alert"><b>Attention</b> Votre version n\'est pas à jour ! <a href="index.php?view=admin&for=update&action=pull" class="btn btn-xs btn-warning" style="float:right;">
+$xml=simplexml_load_file("https://github.com/Peanuts.atom") or die("Error: Cannot create object");
+$update = '<div class="alert alert-warning" role="alert"><b>Attention</b>, Cliquez sur mise à jour si vous avez effectuée aucun modification sur le code. <a href="index.php?view=admin&for=update&action=pull" class="btn btn-xs btn-warning" style="float:right;">
 Mettre à jour</a></div>';
-if($head == $depo)
-{
-	$update = '<div class="alert alert-success" role="alert"><b>Excelent ! </b> Votre version est à jour ! </div>';
-}
 echo $update;
 ?>
 <div class="panel widget-messages-alt">
@@ -790,6 +771,16 @@ foreach ($back as $key => $value)
 }
 if(isset($_GET['for']) AND $_GET['for'] == 'files' AND !isset($_GET['id_movies']))
 {
+		$id = $_GET['id_episode'];
+		if($_GET['action'] == 'delete')
+		{
+			$bdd->exec("DELETE FROM episode_serie WHERE id_episode=$id");
+			if(!empty($_GET['hash']))
+			{
+				exec('rm data/public/'.$_GET['hash'].'.mp4');
+				header('Location: index.php?view=admin&for=files');     
+			}
+		}
 	?>
 <div class="panel">
 <div class="panel-heading">
@@ -866,12 +857,11 @@ if(isset($_GET['for']) AND $_GET['for'] == 'files' AND !isset($_GET['id_movies']
 			if($episode['status'] == 0 OR $episode['encoding_mp4'] == 0)
 	      	{
 	        $percent = get_transmission_serie($episode['id_episode']);
-	        $status = 'DL :'.$percent['percent'].'%';
+	        $status = 'DL : '.$percent['percent'].'%';
 	      	}
 	      	if($episode['status'] == 1 AND $episode['encoding_mp4'] == 1)
 	      	{
-	      	$pourcent = ffmpeg_pourcentage('data/log/'.$episode['hash'].'.log');
-	        $status = 'Encodage en cours '.$pourcent.'%';
+	        $status = 'Encodage en cours '.ffmpeg_pourcentage('data/log/'.$episode['hash'].'.log');
 	      	}
 	      	if($episode['status'] == 1 AND $episode['encoding_mp4'] == 2)
 	      	{
@@ -883,7 +873,7 @@ if(isset($_GET['for']) AND $_GET['for'] == 'files' AND !isset($_GET['id_movies']
 			<td><?php echo $episode['type']; ?></td>
 			<td><?php echo $episode['hash']; ?></td>
 			<td><?php echo $status; ?></td>
-			<td><a class="btn btn-danger btn-xs" href="">Supprimer</a></td>
+			<td><a class="btn btn-danger btn-xs" href="index.php?view=admin&for=files&action=delete&id_episode=<?php echo $episode['id_episode']; ?>&hash=<?php echo $episode['hash']; ?>">Supprimer</a></td>
 		</tr>
 		<?php 
 		}
