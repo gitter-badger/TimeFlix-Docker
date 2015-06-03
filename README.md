@@ -10,13 +10,18 @@ Not compatible for arm version !
 
 ### Login
 
-8000 -> HTTP
-
-2200 -> SSH
-
-
-User : root 
-
+User : root / 
 Pass : timeflix 
 
 Change your root login ! 
+
+Run encodage service manuely
+
+```sh
+nohup php index.php encodage > logs/system.log &
+```
+### Go 
+
+WebInteface -> http://0.0.0.0:8000 and configure your administrator login. 
+
+
