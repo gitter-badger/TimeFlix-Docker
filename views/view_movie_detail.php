@@ -1,4 +1,4 @@
-<div class="bn-container_movie lazy" data-original="//pictures.timeflix.net/<?php echo 'backgrounds'.$img.''; ?>">
+<div class="bn-container_movie lazy" data-original="data/<?php echo 'backgrounds'.$img.''; ?>">
 <div style="position:absolute;height:100%;width:100%;background:rgba(0,0,0,0.4);z-index:0;">
 </div>
     </div>
@@ -40,7 +40,7 @@
         border-right:0;
         border-image: linear-gradient(90deg, #1abc9c 15%, #2ecc71 15%, #2ecc71 12%, #3498db 12%, #3498db 32%, #9b59b6 32%, #9b59b6 35%, #34495e 35%, #34495e 55%, #f1c40f 55%, #f1c40f 59%, #e67e22 59%, #e67e22 63%, #e74c3c 63%, #e74c3c 82%, #ecf0f1 82%, #ecf0f1 92%, #95a5a6 92%);border-image-slice: 1;">
       <div class="col-md-2" style="margin-right:2%;width:250px;height:380px;
-      margin-bottom:2%;border-radius: 10px;box-shadow: 1px 1px 8px #000;background-image: url('//pictures.timeflix.net/<?php echo '/posters/'.$movie_detail['id_moviedb'].'.jpg'; ?>'); background-size: cover;">
+      margin-bottom:2%;border-radius: 10px;box-shadow: 1px 1px 8px #000;background-image: url('data/<?php echo '/posters/'.$movie_detail['id_moviedb'].'.jpg'; ?>'); background-size: cover;">
       </div>
        <div class="col-md-9">
       <video  id="player" style="width: 100%;border-radius: 10px;box-shadow: 1px 1px 8px #000;" controls>
