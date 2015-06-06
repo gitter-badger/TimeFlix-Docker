@@ -3,6 +3,7 @@
      	 <a href="index.php?view=admin&for=dashboard" class="list-group-item"><i class="fa fa-dashboard list-group-icon"></i>Dashboard</a>
 		<a href="index.php?view=admin&for=users" class="list-group-item"><i class="fa fa-users list-group-icon"></i>Utilisateurs</a>
 		<a href="index.php?view=admin&for=files" class="list-group-item"><i class="fa fa-tasks list-group-icon"></i>Fichiers</a>
+			<a href="index.php?view=admin&for=torrent" class="list-group-item"><i class="fa fa-magnet list-group-icon"></i>Transmission</a>
 		<a href="index.php?view=admin&for=stats" class="list-group-item"><i class="fa fa-signal list-group-icon"></i>Statistique</a>
 		<a href="index.php?view=admin&for=logs" class="list-group-item"><i class="fa fa-flask list-group-icon"></i>Logs</a>
 		<a href="index.php?view=admin&for=config" class="list-group-item"><i class="fa fa-cogs list-group-icon"></i>Configuration TimeFlix</a>
@@ -143,6 +144,68 @@ if(isset($_GET['for']) AND $_GET['for'] == 'dashboard')
 
 	<?php 
 }
+if(isset($_GET['for']) AND $_GET['for'] == 'torrent')
+	{?>
+		<div class="panel">
+		<div class="panel-heading">
+			<span class="panel-title"><i class="fa fa-magnet list-group-icon"></i>Transmission</span>
+		</div>
+		<div class="panel-body">
+		<table class="table table-striped">
+	<thead>
+		<tr>
+			<th style="width: 30%;">Name</th>
+			<th style="width: 35%;">Pourcent</th>
+			<th>Remaining time</th>
+			<th>Size</th>
+			<th><center>UP / DOWN </center></th>
+			<th><center>Action</center></th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+		if(!empty($_GET['hash']))
+		{
+			remove_transmission($_GET['hash']);
+			echo '<div class="alert alert-success" role="alert">Action effectuée </div>';
+		}
+		echo '<p align="right"> <span class="label label-success">DOWN : '.format_bytes(transmission()->getSessionStats()->getdownloadSpeed()).'/s </span>  <span class="label label-danger">UP : '.format_bytes(transmission()->getSessionStats()->getuploadSpeed()).'/s</span><p></br>';
+		 foreach (list_get_transmission() as $key => $value)
+		 {
+		 	echo '<tr>';
+		 	echo '<td>'.$value->getName().'</td>';
+		 	$download = format_bytes($value->getDownloadRate());
+   			$upload = format_bytes($value->getUploadRate());
+		 	$label = NULL;
+		 	if($value->getstatus() == 0)
+			{
+					$label = 'progress-bar-success';
+			}
+		 	echo '<td><div class="progress" style="height:18px;">
+				  <div class="progress-bar '.$label.'" role="progressbar" aria-valuenow="'.$value->getPercentDone().'" aria-valuemin="0" aria-valuemax="100" style="width: '.$value->getPercentDone().'%;">
+				    '.$value->getPercentDone().'%
+				  </div>
+				</div></td>';
+				//echo $value->size();
+			if($value->getPercentDone() == 100)
+			{
+					echo '<td>Ratio : '.round($value->getuploadRatio(),2).' </td>';
+			}
+			elseif($value->getPercentDone() == 0)
+			{
+					echo "<td>En attente</td>";
+			}
+			else
+			{
+				echo "<td>". gmdate("H:i:s", $value->getEta()) ." (".count($value->getPeers())." Peers)</td>";
+			}
+			echo '<td>'.format_bytes($value->getSize()).'</td>';
+			echo '<td><center><span class="label label-success">'.$download.'/s</span>  <span class="label label-danger">'.$upload.'/s</span></center></td>';
+			echo '<td><a href="index.php?view=admin&for=torrent&hash='.$value->gethash().'" class="btn btn-xs btn-danger">Supprimer</a></td>';
+		 	echo '</tr>';
+		 } 
+		 echo '</tbody></table>';
+}
 if(isset($_GET['for']) AND $_GET['for'] == 'import_export')
 	{?>
 		<div class="panel">
@@ -151,7 +214,7 @@ if(isset($_GET['for']) AND $_GET['for'] == 'import_export')
 		</div>
 		<div class="panel-body">
 		<div class="alert alert-info" role="alert">En cours de développement </div>
-	<?php 
+	<?php
 }
 if(isset($_GET['for']) AND $_GET['for'] == 'mail')
 	{
@@ -283,6 +346,8 @@ if(isset($_GET['for']) AND $_GET['for'] == 'config')
 			$ffmpeg = $_POST['ffmpeg'];
 			$subliminal = $_POST['subliminal'];
 			$moviedb_api = $_POST['api'];
+			$addic7ed_username = $_POST['addic7ed-username'];
+			$addic7ed_password = $_POST['addic7ed_password'];
 			if($_POST['active_torrent'])
 			{
 				$req = $bdd->exec("UPDATE config SET torrent_active='on' WHERE id_config=1");
@@ -678,7 +743,7 @@ if(isset($_GET['for']) AND $_GET['for'] == 'users' OR empty($_GET['for']))
 		if(isset($_GET['for']) AND $_GET['for'] == 'files' AND isset($_GET['id_movies']))
 {
 ?>
-<form method="post" action="index.php?view=admin&for=files&id_movies=<?php echo $id; ?>">
+<form method="post" action="index.php?view=admin&for=files&id_movies=<?php echo $_GET['id_movies']; ?>">
 <div class="panel">
 <div class="panel-heading">
 	<span class="panel-title"><i class="fa fa-tasks list-group-icon"></i>Détail film</span>
@@ -701,7 +766,7 @@ if(isset($_GET['for']) AND $_GET['for'] == 'users' OR empty($_GET['for']))
 			$synopsis = utf8_decode($_POST['syno']);
 			$encodage = $_POST['encodage'];
 			$file = $_POST['file'];
-			$bdd->exec("UPDATE movies SET synopsis='$synopsis' WHERE id_movies=$id");
+			//$bdd->exec("UPDATE movies SET synopsis=$synopsis' WHERE id_movies=$id");
 			$bdd->exec("UPDATE files_movies SET encoding_mp4='$encodage',name='$file' WHERE id_movies=$id");
 			echo '<div class="alert alert-success" role="alert"><b>Parfait</b>, Modification effectuée.</div>';
 		}

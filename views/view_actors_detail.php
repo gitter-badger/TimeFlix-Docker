@@ -4,7 +4,7 @@
     </div>
     <div id="detail_movie" class="row" style="padding-top:2%;">
   <div class="row">
-    <div class="col-md-5" style="margin-left: 5%;height:505px;">
+    <div class="col-md-8" style="margin-left: 5%;height:505px;">
       <p style="font-size:60px;text-transform: uppercase;font-weight: 300;">
           <?php echo $actors->name; ?>           <p>
         <p style="font-size:20px;text-transform: uppercase;font-weight: 300;">Date de naissance : <?php echo $actors->birthday; ?>

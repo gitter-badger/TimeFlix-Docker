@@ -119,6 +119,23 @@ function get_transmission($hash)
     $list['percent'] = $torrent->getPercentDone();
     return $list;
 }
+function list_get_transmission()
+{
+    $client = new Client();
+    $client->authenticate('admin', 'timeflix');
+    $transmission = new Transmission();
+    $transmission->setClient($client);
+    $torrent = $transmission->all();
+    return $torrent;
+}
+function transmission()
+{
+    $client = new Client();
+    $client->authenticate('admin', 'timeflix');
+    $transmission = new Transmission();
+    $transmission->setClient($client);
+    return $transmission;
+}
 function get_transmission_serie($id_episode)
 {
     global $bdd;
