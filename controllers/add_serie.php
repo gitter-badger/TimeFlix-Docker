@@ -36,7 +36,7 @@ $torrent = json_decode($json);
 foreach($torrent->torrents['0']->file_info->file_names as $file)
 {
 	$status = 0;
-	if(strpos($file,'avi') !== false OR strpos($file,'mkv') !== false OR strpos($file,'mp4') !== false)
+	if(strpos($file,'avi') !== false OR strpos($file,'mkv') !== false OR strpos($file,'mp4') !== false OR strpos($file,'sample') !== TRUE)
 	{
     	$name_file = $file;
     	$status = 1;
