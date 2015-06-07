@@ -1,5 +1,8 @@
 <?php 
-
+if(!isset($_SESSION))
+{
+	exit;
+}
 header('Content-Type: text/html; charset=utf-8');
 require_once 'library/transmission/vendor/autoload.php';
 use Transmission\Client;
