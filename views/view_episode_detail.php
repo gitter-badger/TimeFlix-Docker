@@ -94,7 +94,7 @@ if(isset($episodes_detail['0']['encoding_mp4']) AND $episodes_detail['0']['encod
 		<p style="font-size:15px;text-transform: uppercase;text-align:center;font-weight: 300;text-shadow: 0 2px 0 #000;color:white;border-bottom: 1px solid white;">
 		En cours (<?php echo round($pourcent,1); ?> %)<br></p>
 		 <p style="font-size:25px;text-transform: uppercase;text-align:right;font-weight: 300;text-shadow: 0 2px 0 #000;color:white;padding-top: 2%;padding-right: 3%;">
-  <a target="_blank" href="index.php?view=episode&id_episode=<?php echo $episodes->episode_number; ?>&id_serie=<?php echo $_GET['serie_id'] ?>&id_saison=<?php echo $_GET['saison'] ?>&hash=<?php echo core_encrypt_decrypt('encrypt',$episodes_detail['0']['hash']); ?>" style="color:white;"><span class="fa fa-play"></span> Reprendre<br></a>
+  <a target="_blank" href="index.php?view=webplayer&id_episode=<?php echo $episodes->episode_number; ?>&id_serie=<?php echo $_GET['serie_id'] ?>&season=<?php echo $_GET['saison'] ?>&hash=<?php echo core_encrypt_decrypt('encrypt',$episodes_detail['0']['hash']); ?>" style="color:white;"><span class="fa fa-play"></span> Reprendre<br></a>
   </p>
 
 		</div><?php
