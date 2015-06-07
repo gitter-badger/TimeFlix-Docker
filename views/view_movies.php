@@ -25,7 +25,6 @@ $affiche = json_decode($serie['0']['data'])->backdrop_path;
 }
 ?>
 </div>
-<script type="text/javascript"> window.jQuery || document.write('<script src="theme/js/jquery.min.js">'+"<"+"/script>"); </script>
 <script src="theme/js/jquery.film_roll.js"></script>
 <script type="text/javascript">
 $(function()

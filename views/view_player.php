@@ -40,3 +40,10 @@ $data = get_data('episode_serie',"WHERE id_episode=$id_episode");
 }?>
 </center>
 </div>
+<div id="playerduration" style="display: none"/>
+<script language="Javascript">
+	var vid = document.getElementById("player");
+	setInterval(function() {
+	     $("#playerduration").load("index.php?view=views_movies&duration="+vid.currentTime+"&id_movies=<?php echo $id_episode;?>");
+	}, 4000);
+</script> 

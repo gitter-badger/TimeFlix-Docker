@@ -1,7 +1,6 @@
 </div>
 </div>
 <div id="duration" style="display: none"/>
-<script type="text/javascript"> window.jQuery || document.write('<script src="theme/js/jquery.min.js">'+"<"+"/script>"); </script>
 <!-- <![endif]-->
 <!--[if lte IE 9]>
 	<script type="text/javascript"> window.jQuery || document.write('<script src="/js/jquery.min.ie.js">'+"<"+"/script>"); </script>

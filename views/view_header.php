@@ -16,6 +16,7 @@
 	<link href="theme/css/video-js.css" rel="stylesheet" type="text/css">
 	<link href="theme/css/timeflix.css" rel="stylesheet" type="text/css">
 	<link href="theme/css/pnotify.custom.min.css" rel="stylesheet" type="text/css">
+	<script src="theme/js/jquery.min.js"></script>
 	<link rel="icon" href="theme/favicon.ico" />
 
 </head>
