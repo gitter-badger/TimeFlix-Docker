@@ -49,7 +49,7 @@
 <br><br>
       <p style="font-size:30px;text-transform: uppercase;font-weight: 300;">
       <span class="fa fa-info-circle"></span>&nbsp;&nbsp;Synopsis 
-      <a href="index.php?view=download&file=<?php echo $movie_detail['hash']; ?>" target="_blank" class="btn btn-sm btn-danger" style="margin-top:1%;float:right;margin-left:1%;">
+      <a href="<?php echo secure_link('/video/'.$movie_detail['hash'].'.mp4'); ?>" target="_blank" class="btn btn-sm btn-danger" style="margin-top:1%;float:right;margin-left:1%;">
       <span class="fa  fa-download"> Télecharger (<?php echo format_bytes(filesize('data/public/'.$movie_detail['hash'].'.mp4')); ?>)</a>
       <?php 
       if (file_exists('data/public/x265/'.$movie_detail['hash'].'.mp4')) 
