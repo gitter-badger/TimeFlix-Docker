@@ -26,7 +26,7 @@ $data = get_data('episode_serie',"WHERE id_episode=$id_episode");
 			?>
 				<div class="col-md-10" style="height:10px;"></div>
 			<div class="col-md-6" style="float:right;padding-bottom: 1%;">
-		<video id="player" style="width:80%;float:left;border-radius: 5px;box-shadow: 1px 1px 8px #000;" controls>
+		<video id="<?php echo $id_episode;?>" style="width:80%;float:left;border-radius: 5px;box-shadow: 1px 1px 8px #000;" controls>
 			  <source src="<?php echo secure_link('/video/'.$data['0']['hash'].'.mp4'); ?>" type="video/mp4">
   <track kind="captions" src="data/subtiles/<?php echo $data['0']['hash']; ?>.vtt" srclang="en" label="French Subtitles" default/>
 </video>
@@ -41,9 +41,10 @@ $data = get_data('episode_serie',"WHERE id_episode=$id_episode");
 </center>
 </div>
 <div id="playerduration" style="display: none"/>
+
 <script language="Javascript">
-	var vid = document.getElementById("player");
+	var vid = document.getElementById("<?php echo $id_episode;?>");
 	setInterval(function() {
-	     $("#playerduration").load("index.php?view=views_movies&duration="+vid.currentTime+"&id_movies=<?php echo $id_episode;?>");
+	     $("#<?php echo $id_episode;?>").load("index.php?view=views_movies&duration="+vid.currentTime+"&id_movies=<?php echo $id_episode;?>");
 	}, 4000);
 </script> 

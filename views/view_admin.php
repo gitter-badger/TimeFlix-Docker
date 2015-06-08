@@ -145,7 +145,13 @@ if(isset($_GET['for']) AND $_GET['for'] == 'dashboard')
 	<?php 
 }
 if(isset($_GET['for']) AND $_GET['for'] == 'torrent')
-	{?>
+	{
+		if(!empty($_GET['hash']))
+		{
+			remove_transmission($_GET['hash']);
+			echo '<div class="alert alert-success" role="alert">Action effectuée </div>';
+		}
+	?>
 		<div class="panel">
 		<div class="panel-heading">
 			<span class="panel-title"><i class="fa fa-magnet list-group-icon"></i>Transmission</span>
@@ -164,11 +170,6 @@ if(isset($_GET['for']) AND $_GET['for'] == 'torrent')
 	</thead>
 	<tbody>
 		<?php
-		if(!empty($_GET['hash']))
-		{
-			remove_transmission($_GET['hash']);
-			echo '<div class="alert alert-success" role="alert">Action effectuée </div>';
-		}
 		echo '<p align="right"> <span class="label label-success">DOWN : '.format_bytes(transmission()->getSessionStats()->getdownloadSpeed()).'/s </span>  <span class="label label-danger">UP : '.format_bytes(transmission()->getSessionStats()->getuploadSpeed()).'/s</span><p></br>';
 		 foreach (list_get_transmission() as $key => $value)
 		 {
@@ -526,8 +527,9 @@ echo $update;
 						?>
 							<div class="message">
 								<img src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/128/Apps-system-software-update-icon.png" alt="" class="message-avatar">
-								<a href="#" class="message-subject"><?php echo $value->title; ?></a>
-								<div class="message-description">
+								<a href="#" class="message-subject"></a>
+								<div class="message-description" style="color:#555;">
+									<?php echo $value->content; ?>
 									from <a href="#"><?php echo $value->author->name; ?></a>
 									&nbsp;&nbsp;·&nbsp;&nbsp;
 									<?php echo temps_ecoule($value->updated,'date'); ?>
@@ -709,6 +711,7 @@ if(isset($_GET['for']) AND $_GET['for'] == 'users' OR empty($_GET['for']))
 			<th>User agent</th>
 			<th>IP</th>
 			<th>Data usage</th>
+			<th>Notification email</th>
 			<th>Status</th>
 		</tr>
 	</thead>
@@ -727,11 +730,12 @@ if(isset($_GET['for']) AND $_GET['for'] == 'users' OR empty($_GET['for']))
 		?>
 		<tr>
 			<td><?php echo $user['adresse_email']; ?></td>
-			<td><?php echo $user['password_crypt'];//core_encrypt_decrypt('decrypt',$user['password_crypt']); ?> <a href="index.php?view=admin&for=users&id_users=<?php echo $user['id_users']; ?>&action=lost">(Renvoyer)</a></td>
+			<td><?php //core_encrypt_decrypt('decrypt',$user['password_crypt']); ?><span class="label label-warning">Crypter</span> <a href="index.php?view=admin&for=users&id_users=<?php echo $user['id_users']; ?>&action=lost">(Renvoyer en clair)</a></td>
 			<td><?php echo $connexion; ?></td>
 			<td><?php echo $log[0]['useragent']; ?></td>
 			<td><?php echo $log[0]['adresse_ip']; ?> <span class="label label-info"><?php echo utf8_encode($record->city); ?></span></td>
 			<td><?php echo get_data_usage($user['id_users']); ?></td>
+			<td><?php echo $user['notif_email']; ?></td>
 			<td><?php echo $user['status'];  if($user['status'] == 'attente') { echo ' <a href="index.php?view=admin&for=users&id_users='.$user['id_users'].'&action=valide">(Confirmer)</a>'; } ?></td>
 		</tr>
 		<?php
@@ -885,6 +889,10 @@ if(isset($_GET['for']) AND $_GET['for'] == 'files' AND !isset($_GET['id_movies']
 			if($pourcent < 100)
 			{
 				$label = 'danger';
+			}
+			if($pourcent > 80 AND $pourcent < 100)
+			{
+				$label = 'warning';
 			}
 		?>
 		<tr>
