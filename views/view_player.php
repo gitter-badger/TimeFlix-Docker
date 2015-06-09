@@ -43,8 +43,8 @@ $data = get_data('episode_serie',"WHERE id_episode=$id_episode");
 <div id="playerduration" style="display: none"/>
 
 <script language="Javascript">
-	var vid = document.getElementById("<?php echo $id_episode;?>");
-	setInterval(function() {
-	     $("#<?php echo $id_episode;?>").load("index.php?view=views_movies&duration="+vid.currentTime+"&id_movies=<?php echo $id_episode;?>");
-	}, 4000);
+	//var vid = document.getElementById("<?php echo $id_episode;?>");
+	//setInterval(function() {
+	  //   $("#<?php echo $id_episode;?>").load("index.php?view=views_movies&duration="+vid.currentTime+"&id_movies=<?php echo $id_episode;?>");
+	//}, 4000);
 </script> 
