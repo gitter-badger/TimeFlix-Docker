@@ -18,7 +18,6 @@ $time = $time[1] + $time[0];
 $start = $time;
 
 include_once('config/config.php');
-define('CRYPT_KEY', '*mr6dRQ9T/@5Gn9c!5S-');
 require_once('library/phpmailer/class.phpmailer.php');
 require_once("library/phpmailer/class.smtp.php"); 
 include_once('core/core.crypt.php');
