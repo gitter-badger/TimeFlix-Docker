@@ -23,6 +23,7 @@ Update TimeFlix
 
 ```sh
 cd /var/www/time/
+nano config/config.php >> and change key_crypt for security password
 git pull 
 ```
 
