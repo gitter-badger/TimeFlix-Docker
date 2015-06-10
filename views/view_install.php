@@ -9,7 +9,7 @@
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin" rel="stylesheet" type="text/css">
 <body style="background-image:url(theme/images/black_linen_v2.png);">
 
- <center><p style="font-size:50px;text-transform: uppercase;font-weight: 300;padding: 1%;color:white;text-shadow: 0 3px 0 #000;"><span class="fa fa-cogs"></span> Configuration</p></center>
+ <center><p style="font-size:50px;text-transform: uppercase;font-weight: 300;padding: 1%;color:white;text-shadow: 0 3px 0 #000;"><span class="fa fa-cogs"></span> Installation</p></center>
 <div style="width: 500px;margin-left: auto;margin-right:auto;">
 <div class="panel">
     <div class="panel-heading">
