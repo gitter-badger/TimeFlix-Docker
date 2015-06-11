@@ -12,6 +12,5 @@ foreach($movie_detail as $cle => $movie_detail)
 {
     $films[$cle]['synopsis'] = htmlspecialchars($movie_detail['synopsis']);
 }
-$img = rand_local_image($movie_detail['id_moviedb']);
 $list_actors = search_movie_actors_db($movie_detail['id_moviedb']);
 include_once('views/view_movie_detail.php');

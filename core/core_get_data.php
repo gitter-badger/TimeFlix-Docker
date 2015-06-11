@@ -282,6 +282,14 @@ function rand_local_image($id_movies)
 	$key = array_rand($value,1);
 	return $value[$key]['file'];
 }
+function list_local_image($id_movies)
+{
+  global $bdd;
+  $req = $bdd->prepare('SELECT file FROM backgrounds WHERE id_movies = '.$id_movies.'');
+  $req->execute();
+  $value = $req->fetchAll(); 
+  return $value;
+}
 function get_data_usage($id_users)
 {
 	global $bdd;

@@ -8,7 +8,6 @@
 <script src="theme/js/jquery.lazyload.js"></script>
 <script src="theme/js/bootstrap.min.js"></script>
 <script src="theme/js/pixel-admin.min.js"></script>
-<script src="theme/js/pnotify.custom.min.js"></script>
 <script src="theme/js/srt.js"></script>
 <script src="theme/js/time.js"></script>
 <script language="Javascript">

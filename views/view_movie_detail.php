@@ -1,7 +1,20 @@
-<div class="bn-container_movie lazy" data-original="data/<?php echo 'backgrounds'.$img.''; ?>">
-<div style="position:absolute;height:100%;width:100%;background:rgba(0,0,0,0.4);z-index:0;">
+<div class="bn-container_movie">
+         <div id="kenburns_slideshow" style="background:rgba(0,0,0,0.4)"></div>  
 </div>
-    </div>
+<script src="theme/js/kenburns.js"></script>
+<script type="text/javascript">
+$("#kenburns_slideshow").Kenburns({
+    images:[<?php 
+    foreach (list_local_image($movie_detail['id_moviedb']) as $key => $value)
+    {
+     echo '"data/backgrounds'.$value['file'].'",';
+    }
+?>],
+        scale:0.90,
+        duration:8000,
+        fadeSpeed:1200
+});
+</script>
     <div id="detail_movie" class="row" style="padding-top:2%;">
   <div class="row">
     <div class="col-md-5" style="margin-left: 5%;height:505px;">

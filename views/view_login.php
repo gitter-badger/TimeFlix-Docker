@@ -73,7 +73,7 @@
 		<div class="form-actions">
 			<input type="submit" value="Connexion" class="btn btn-primary btn-block btn-lg">
 		</div> <!-- / .form-actions -->
-		<a class="btn btn-default btn-block btn-lg" style="margin-top:10px;" id="new" href="#">Inscription</a>
+		<a class="btn btn-default btn-block btn-lg" style="margin-top:10px;" id="new" href="#" >Inscription</a>
 	</form>
 	<div style="float:right;margin-top: 20.5%;margin-right: 2%;">
 	<p style="font-size:80px;text-transform: uppercase;font-weight: 300;color:white;text-shadow: 0 2px 0 #000;text-align: center;">

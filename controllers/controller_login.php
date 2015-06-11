@@ -4,6 +4,7 @@
 Controleur login 
 */
 $affiche = get_data('movies',"");
+$affiche = array();
 if(count($affiche) == 0)
 {
 	$img = '/default.jpg';

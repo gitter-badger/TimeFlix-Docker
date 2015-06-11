@@ -1,6 +1,23 @@
-   <div class="bn-container_movie lazy" data-original="https://image.tmdb.org/t/p/original<?php echo $url[$key]; ?>">
-<div style="position:absolute;height:100%;width:100%;background:rgba(0,0,0,0.4);z-index:0;">
+<div class="bn-container_movie">
+         <div id="kenburns_slideshow" style="background:rgba(0,0,0,0.4)"></div>  
 </div>
+<script src="theme/js/kenburns.js"></script>
+<script type="text/javascript">
+$("#kenburns_slideshow").Kenburns({
+    images:[<?php 
+    foreach ($images->results as $key => $value) {
+  if($value->height == 1080)
+  {
+     echo '"https://image.tmdb.org/t/p/original'.$value->file_path.'",';
+  }
+}
+?>
+        ],
+        scale:0.90,
+        duration:8000,
+        fadeSpeed:1200
+});
+</script>
     </div>
     <div id="detail_movie" class="row" style="padding-top:2%;">
   <div class="row">

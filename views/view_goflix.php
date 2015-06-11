@@ -5,7 +5,7 @@
 		<span class="input-group-addon no-background"><span class="fa fa-search" style="text-shadow: none;"></span></span>
 		<input class="form-control" type="text" name="q" id="q" style="border:1px solid #eee;" placeholder="Entre le nom d'un film ...">
 	</div> <!-- / .input-group -->
-		<div class="alert alert-success" role="alert" style="margin-top:1%;text-shadow: 0px 0px #000;">Astuce : Vous souhaitez filtrer votre bibliotèque ? Tapez @ suivis de votre mot clé ! </div>	
+		<div class="alert alert-success" role="alert" style="margin-top:1%;text-shadow: 0px 0px #000;">Astuce : Vous souhaitez filtrer votre bibliothèque ? Tapez @ suivis de votre mot clé ! </div>	
 </form>
 </div>
 <div id="results" style="padding-top: 14%;">

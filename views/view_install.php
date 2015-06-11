@@ -9,7 +9,7 @@
 <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin" rel="stylesheet" type="text/css">
 <body style="background-image:url(theme/images/black_linen_v2.png);">
 
- <center><p style="font-size:50px;text-transform: uppercase;font-weight: 300;padding: 1%;color:white;text-shadow: 0 3px 0 #000;"><span class="fa fa-cogs"></span> Configuration</p></center>
+ <center><p style="font-size:50px;text-transform: uppercase;font-weight: 300;padding: 1%;color:white;text-shadow: 0 3px 0 #000;"><span class="fa fa-cogs"></span> Installation</p></center>
 <div style="width: 500px;margin-left: auto;margin-right:auto;">
 <div class="panel">
     <div class="panel-heading">
@@ -34,7 +34,7 @@
 
 	   ?>
 -->
-		<div class="alert alert-info" role="alert"><center><b> Version DOCKER </b></center></br> Aucun réglages supplémentaire est nécessaire, il faudra juste pense à configurer votre cle api <b><a href="https://www.themoviedb.org/documentation/api">MovieDB</a></b></div>
+	<!--	<div class="alert alert-info" role="alert"><center><b> Version DOCKER </b></center></br> Aucun réglages supplémentaire est nécessaire, il faudra juste pense à configurer votre cle api <b><a href="https://www.themoviedb.org/documentation/api">MovieDB</a></b></div>-->
 	   <form action="" method="post" id="signin-form_new">
 	   <div class="form-group">
 			<input type="text" name="inc_username" id="inc_username" class="form-control input-lg" placeholder="Votre adresse mail">

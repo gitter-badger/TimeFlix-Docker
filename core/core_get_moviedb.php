@@ -47,6 +47,13 @@ function get_images_actors($id)
     $data = json_decode($json);
     return $data;
 }
+function get_images_series($id)
+{ 
+    global $moviedb_api;
+    $json = file_get_contents('http://api.themoviedb.org/3/tv/'.$id.'/images?api_key='.$moviedb_api.''); 
+    $data = json_decode($json);
+    return $data;
+}
 function get_movies_actors($id)
 { 
     global $moviedb_api;

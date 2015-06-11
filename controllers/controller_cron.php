@@ -70,7 +70,7 @@ function send_email()
 			 $message = str_replace('%synopsis%', $info->syno, $message);
 			 $message = str_replace('%title%', $info->title, $message);
 		}
-		$mail->SetFrom('noreply@yourdomain.net', 'Système TimeFlix');
+		$mail->SetFrom('noreply@timeflix.net', 'Système TimeFlix');
 		$mail->MsgHTML($message);
 		$mail->AddAddress($mail_traitement['to'], $mail_traitement['to']);
 		if(!$mail->Send()) {
@@ -318,6 +318,10 @@ function encodage()
 
 			$bdd->exec("UPDATE episode_serie SET encoding_mp4='1' WHERE id_episode=$id");
 			$args = '-c:v copy';
+			if(!empty($encoding['h264_args']))
+			{
+				$args = $encoding['h264_args'];
+			}
 			if (strpos($file,'VOSTFR') !== false)
 			{
 				echo 'starting encoging ['.$args.']: '.$file.PHP_EOL;

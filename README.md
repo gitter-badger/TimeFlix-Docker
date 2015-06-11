@@ -2,7 +2,7 @@
 
 ### Install
 ```sh
-  apt-get install docker-io
+  apt-get install docker.io
   docker pull kouja/timeflix
   docker run -d -p 8000:80 -p 2200:22 kouja/timeflix
 ```
@@ -23,6 +23,7 @@ Update TimeFlix
 
 ```sh
 cd /var/www/time/
+nano config/config.php >> and change key_crypt for security password
 git pull 
 ```
 
