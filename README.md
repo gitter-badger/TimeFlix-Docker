@@ -38,7 +38,5 @@ nohup php index.php encodage > logs/system.log &
 - http://0.0.0.0:8000  
 - Configure your administrator login.
 
-![2](https://cloud.githubusercontent.com/assets/533219/7962001/392e1a8c-0a0b-11e5-84ff-702be0e1702b.png)
-
 Enjoy ! 
 
