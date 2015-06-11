@@ -693,14 +693,14 @@ if(isset($_GET['for']) AND $_GET['for'] == 'users' OR empty($_GET['for']))
 						<span class="panel-title">Utilisateurs</span>
 					</div>
 					<div class="panel-body">
-<legend>Envoyer une invitation</legend>
+<!-- <legend>Envoyer une invitation</legend>
 <div class="alert alert-warning" role="alert"><b>Attention !</b>  Cette fonctionnalité nécessite une configuration mail valide</div>
   <div class="form-group">
     <label for="exampleInputEmail1">Adresse email</label>
     <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Entrez un email valide">
   </div>
   <button style="float:right;" type="submit" class="btn btn-success">Générer</button>
-</form>
+</form> -->
 <legend>Gérer les utilisateurs</legend>
 <table class="table table-striped">
 	<thead>
@@ -722,7 +722,7 @@ if(isset($_GET['for']) AND $_GET['for'] == 'users' OR empty($_GET['for']))
 		{
 			$log = get_data('logs',"WHERE id_users='".$user['id_users']."' ORDER BY date_add DESC LIMIT 1");
 			$record = geoip_record_by_addr($gi,$log[0]['adresse_ip']);
-			$connexion = 'Aucune données';
+			$connexion = 'Aucune données - Registered -> '.temps_ecoule($user['registered'],'date');
 			if(!empty($log[0]['date_add']))
 			{
 				$connexion = temps_ecoule($log[0]['date_add'],'date');
@@ -730,7 +730,7 @@ if(isset($_GET['for']) AND $_GET['for'] == 'users' OR empty($_GET['for']))
 		?>
 		<tr>
 			<td><?php echo $user['adresse_email']; ?></td>
-			<td><?php //core_encrypt_decrypt('decrypt',$user['password_crypt']); ?><span class="label label-warning">Crypter</span> <a href="index.php?view=admin&for=users&id_users=<?php echo $user['id_users']; ?>&action=lost">(Renvoyer en clair)</a></td>
+			<td><?php //echo core_encrypt_decrypt('decrypt',$user['password_crypt']); ?><span class="label label-warning">Crypter</span> <a href="index.php?view=admin&for=users&id_users=<?php echo $user['id_users']; ?>&action=lost">(Renvoyer en clair)</a></td>
 			<td><?php echo $connexion; ?></td>
 			<td><?php echo $log[0]['useragent']; ?></td>
 			<td><?php echo $log[0]['adresse_ip']; ?> <span class="label label-info"><?php echo utf8_encode($record->city); ?></span></td>

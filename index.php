@@ -18,7 +18,6 @@ $time = $time[1] + $time[0];
 $start = $time;
 
 include_once('config/config.php');
-define('CRYPT_KEY', '*mr6dRQ9T/@5Gn9c!5S-');
 require_once('library/phpmailer/class.phpmailer.php');
 require_once("library/phpmailer/class.smtp.php"); 
 include_once('core/core.crypt.php');
@@ -36,7 +35,6 @@ $right = array_shift($right);
 $moviedb_api = $right['moviedb_api'];
 
 $gi = geoip_open(realpath("library/geoip/GeoLiteCity.dat"),GEOIP_STANDARD);
-
 $admi_count = get_admin();
 if($admi_count[0][0] == 0)
 {
